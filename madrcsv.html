@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Upload Marks</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #047857;
+            --primary-light: #10b981;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #1f2937;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* --- File Upload Section --- */
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            background: #ecfdf5;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .upload-area:hover {
+            background: #d1fae5;
+            border-color: var(--primary-color);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: inline-block;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* --- Buttons --- */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-parse { background-color: #3b82f6; color: white; }
+        .btn-parse:hover { background-color: #2563eb; }
+
+        .btn-template { background-color: #6b7280; color: white; }
+        .btn-template:hover { background-color: #4b5563; }
+
+        .btn-save { 
+            background-color: var(--primary-color); 
+            color: white; 
+            display: none; /* Hidden by default */
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .btn-save:hover { background-color: #064e3b; }
+
+        /* --- Status Messages --- */
+        #message {
+            text-align: center;
+            margin: 15px 0;
+            font-weight: 600;
+            min-height: 20px;
+        }
+        .error { color: #dc2626; }
+        .success { color: #059669; }
+
+        /* --- Table Styling --- */
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background-color: #f9fafb;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: #4b5563;
+        }
+
+        tr:hover { background-color: #f3f4f6; }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Admin Data Upload</h1>
+        <p class="subtitle">Upload Student Marks via CSV to Firebase</p>
+
+        <div class="upload-area" id="dropZone">
+            <p style="margin-top:0; color:#4b5563;">Drag & Drop your CSV file here or</p>
+            <label for="csvFileInput" class="file-label">📂 Browse File</label>
+            <input type="file" id="csvFileInput" accept=".csv">
+            <p id="fileName" style="margin-top:10px; font-size:13px; color:#047857; font-weight:bold;"></p>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-template" id="downloadTemplate">
+                ⬇️ Download Template
+            </button>
+            <button class="btn-parse" id="parseButton">
+                📊 Preview Data
+            </button>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="table-container">
+            <table id="csvTable">
+                <thead>
+                    <tr>
+                        <th>Ad Number</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Division</th>
+                        <th>Subject</th>
+                        <th>Max Mark</th>
+                        <th>Obtained Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:20px;">No data loaded yet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn-save" id="saveButton">🚀 Upload to Database</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getFirestore, doc, writeBatch } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyABcd8PIcjwIvDqFaLlNHpb8j-TE2Hi9YA",
+            authDomain: "thanbeeh-e61d9.firebaseapp.com",
+            projectId: "thanbeeh-e61d9",
+            storageBucket: "thanbeeh-e61d9.appspot.com",
+            messagingSenderId: "1072993385928",
+            appId: "1:1072993385928:web:7279146f96c0410dd5d4fd",
+            measurementId: "G-N00QZBX79E"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let selectedFile = null;
+            let parsedData = {}; 
+
+            const fileInput = document.getElementById('csvFileInput');
+            const fileNameDisplay = document.getElementById('fileName');
+            const parseButton = document.getElementById('parseButton');
+            const saveButton = document.getElementById('saveButton');
+            const messageDiv = document.getElementById('message');
+            const tableBody = document.querySelector('#csvTable tbody');
+            const templateBtn = document.getElementById('downloadTemplate');
+
+            // --- 1. Template Download Logic ---
+            templateBtn.addEventListener('click', () => {
+                const csvContent = "data:text/csv;charset=utf-8," 
+                    + "Ad Number,Name,Class,Division,Subject,Max Mark,Obtained Mark\n"
+                    + "1001,John Doe,5,A,Fiqh,100,85\n"
+                    + "1001,John Doe,5,A,Biology,50,45\n"
+                    + "1002,Jane Smith,5,A,Fiqh,100,92";
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "student_marks_template.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+
+            // --- 2. File Selection ---
+            fileInput.addEventListener('change', function(event) {
+                selectedFile = event.target.files[0];
+                if (selectedFile) {
+                    fileNameDisplay.textContent = `Selected: ${selectedFile.name}`;
+                    messageDiv.textContent = "";
+                    messageDiv.className = "";
+                }
+            });
+
+            // --- 3. Parse CSV (Using PapaParse) ---
+            parseButton.addEventListener('click', function () {
+                messageDiv.textContent = '';
+                tableBody.innerHTML = '';
+                saveButton.style.display = 'none';
+
+                if (!selectedFile) {
+                    messageDiv.textContent = '❌ Please select a CSV file first.';
+                    messageDiv.className = "error";
+                    return;
+                }
+
+                Papa.parse(selectedFile, {
+                    header: false, // We assume standard index based columns as per your format
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        const rows = results.data;
+                        
+                        if (rows.length === 0) {
+                            messageDiv.textContent = '❌ The CSV file is empty.';
+                            messageDiv.className = "error";
+                            return;
+                        }
+
+                        parsedData = {}; 
+                        let validRowCount = 0;
+
+                        // Loop through rows
+                        rows.forEach((columns, index) => {
+                            // If user included a header row, we should probably skip it.
+                            // Simple check: if the first column is "Ad Number" (text), skip.
+                            if (index === 0 && (columns[0] || "").toString().toLowerCase().includes("ad number")) {
+                                return;
+                            }
+
+                            if (columns.length < 7) {
+                                console.warn(`Skipping row ${index + 1}: Not enough columns.`);
+                                return;
+                            }
+
+                            const [adnumber, name, studentClass, division, subject, maxMark, obtMark] = columns;
+
+                            if (!adnumber) return; // Skip empty AD numbers
+
+                            validRowCount++;
+
+                            // Group Data Logic
+                            if (!parsedData[adnumber]) {
+                                parsedData[adnumber] = {
+                                    adnumber: adnumber.toString().trim(),
+                                    name: name.trim(),
+                                    class: studentClass.toString().trim(),
+                                    division: division.trim(),
+                                    subjects: []
+                                };
+                            }
+
+                            parsedData[adnumber].subjects.push({
+                                subject: subject.trim(),
+                                maxMark: maxMark.toString().trim(),
+                                obtMark: obtMark.toString().trim()
+                            });
+
+                            // Render Row
+                            const tr = document.createElement('tr');
+                            columns.slice(0, 7).forEach(col => {
+                                const td = document.createElement('td');
+                                td.textContent = col;
+                                tr.appendChild(td);
+                            });
+                            tableBody.appendChild(tr);
+                        });
+
+                        if (validRowCount === 0) {
+                            messageDiv.textContent = '❌ No valid data found. Check the template.';
+                            messageDiv.className = "error";
+                        } else {
+                            messageDiv.textContent = `✅ Successfully parsed ${validRowCount} records! Ready to upload.`;
+                            messageDiv.className = "success";
+                            saveButton.style.display = 'flex';
+                        }
+                    },
+                    error: function(err) {
+                        messageDiv.textContent = '❌ Error parsing file: ' + err.message;
+                        messageDiv.className = "error";
+                    }
+                });
+            });
+
+            // --- 4. Upload to Firestore ---
+            saveButton.addEventListener('click', async function () {
+                if (Object.keys(parsedData).length === 0) return;
+
+                const btn = document.getElementById("saveButton");
+                btn.textContent = "⏳ Uploading...";
+                btn.disabled = true;
+
+                try {
+                    const students = Object.entries(parsedData);
+                    let batchCount = 0;
+                    let batch = writeBatch(db);
+                    let totalBatches = 0;
+
+                    for (let i = 0; i < students.length; i++) {
+                        const [adnumber, studentData] = students[i];
+                        const studentRef = doc(db, "studentMarks", adnumber);
+                        batch.set(studentRef, studentData);
+                        batchCount++;
+
+                        if (batchCount >= 400 || i === students.length - 1) { // 400 is safer limit
+                            await batch.commit();
+                            batch = writeBatch(db);
+                            batchCount = 0;
+                            totalBatches++;
+                        }
+                    }
+
+                    messageDiv.textContent = "✅ All data successfully uploaded to Firestore!";
+                    messageDiv.className = "success";
+                    btn.style.display = 'none';
+                    alert("Upload Complete!");
+
+                } catch (error) {
+                    console.error("Firestore Error:", error);
+                    messageDiv.textContent = "❌ Failed to upload data. Check console.";
+                    messageDiv.className = "error";
+                    btn.textContent = "🚀 Upload to Database";
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
