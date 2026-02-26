@@ -360,7 +360,8 @@
                         name: data.name,
                         class: data.class,
                         division: data.division,
-                        adnumber: data.adnumber
+                        adnumber: data.adnumber,
+                        rank: data.rank
                     };
                 });
 
@@ -405,7 +406,7 @@
                     <h1 class="arabic">مدرسة هداية المؤمنين</h1>
                     <h2 class="malayalam">ഹിദായത്തുൽ മുഅ്മിനീൻ മദ്രസ</h2>
                     <div id="campus">PMSA Orphanage Campus Kattilangadi</div>
-                    <div class="exam-title">Annual Result 2024-25</div>
+                    <div class="exam-title">Annual Result 2025-26</div>
                 </div>
 
                 <div class="info-grid">
@@ -428,9 +429,10 @@
                 </table>
 
                 <div class="footer-summary">
-                    <div>Total: ${obt}/${total}</div>
-                    <div>${percent}%</div>
-                </div>
+    <div>Total: ${obt}/${total}</div>
+    <div>${percent}%</div>
+    ${failed === false ? `<div style="font-weight: bold; color: var(--primary-color);">Rank: ${info.rank}</div>` : ''}
+</div>
 
                 ${statusHtml}
 
@@ -490,3 +492,4 @@
     </script>
 </body>
 </html>
+
