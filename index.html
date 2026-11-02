@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduSync - School Examination & Result Management System</title>
+    <title>EduSync - School Examination, Attendance & Result System</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- External Libraries: PapaParse, html2canvas & html2pdf -->
+    <!-- PapaParse, html2canvas & html2pdf -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -92,6 +92,15 @@
             margin-bottom: 4px;
         }
 
+        .sidebar-section {
+            padding: 14px 16px 5px;
+            color: #64748b;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
         .sidebar-link {
             display: flex;
             align-items: center;
@@ -116,6 +125,17 @@
             font-weight: 600;
         }
 
+        .btn-add-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+        }
+
         .main-content {
             flex-grow: 1;
             display: flex;
@@ -125,14 +145,10 @@
             overflow-y: auto;
         }
 
-        /* Mobile Overlay */
         .sidebar-backdrop {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.55);
             z-index: 1040;
         }
@@ -140,9 +156,7 @@
         @media (max-width: 991px) {
             .sidebar {
                 position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
+                top: 0; bottom: 0; left: 0;
                 transform: translateX(-100%);
             }
             .sidebar.show {
@@ -153,15 +167,17 @@
             }
         }
 
-        /* Horizontal Exam Tab Styling */
+        /* Sub-tab styling */
         .exam-horizontal-tabs .nav-link {
             color: #475569;
             font-weight: 600;
             border-radius: 8px;
-            padding: 10px 18px;
+            padding: 9px 16px;
             border: 1px solid #e2e8f0;
             background: #ffffff;
             transition: all 0.2s;
+            font-size: 0.88rem;
+            white-space: nowrap;
         }
         .exam-horizontal-tabs .nav-link:hover {
             background-color: #f1f5f9;
@@ -173,8 +189,52 @@
             border-color: var(--primary-emerald) !important;
             box-shadow: 0 4px 6px -1px rgba(4, 120, 87, 0.25);
         }
+        .exam-tabs-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        .exam-tabs-scroll .exam-horizontal-tabs {
+            flex-wrap: nowrap;
+            width: max-content;
+            min-width: 100%;
+        }
+        .exam-tabs-scroll .nav-item {
+            flex: 0 0 auto;
+        }
 
-        /* Progress Card Styling */
+        /* Mark input & Absent Button */
+        .mark-cell-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .mark-input {
+            width: 72px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .mark-input.absent-mode {
+            background-color: #fee2e2 !important;
+            color: #dc2626 !important;
+            border-color: #ef4444 !important;
+            font-weight: 700;
+        }
+        .mark-input.failed {
+            background-color: #fff1f2;
+            border-color: #f43f5e;
+            color: #e11d48;
+        }
+        .btn-ab-toggle {
+            padding: 3px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        /* Progress Card Preview */
         .progress-card-preview {
             width: 100%;
             max-width: 440px;
@@ -197,22 +257,9 @@
             border-radius: 9999px;
             font-weight: 700;
         }
-
         .rank-1 { background: #fef08a; color: #854d0e; }
         .rank-2 { background: #e2e8f0; color: #475569; }
         .rank-3 { background: #fed7aa; color: #9a3412; }
-
-        .mark-input {
-            width: 80px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .mark-input.failed {
-            border-color: #ef4444;
-            background-color: #fef2f2;
-            color: #dc2626;
-        }
 
         @media print {
             .sidebar, .navbar-top, .no-print, .actions-bar {
@@ -257,7 +304,7 @@
                     <div class="bg-dark p-4 text-center text-white border-bottom border-success border-4">
                         <div class="arabic-font fs-3 mb-1" style="color: #34d399;">مدرسة هداية المؤمنين</div>
                         <div class="malayalam-font fs-6 mb-1">ഹിദായത്തുൽ മുഅ്മിനീൻ മദ്രസ</div>
-                        <small class="text-secondary text-uppercase tracking-wider">Exam & Results Control System</small>
+                        <small class="text-secondary text-uppercase tracking-wider">Exam, Attendance & Results Portal</small>
                     </div>
 
                     <div class="card-body p-4">
@@ -298,21 +345,21 @@
                                 </form>
                             </div>
 
-                            <!-- Admin Login (Validated from Firestore 'users' collection) -->
+                            <!-- Admin Login (Validates against 'users' collection with fallback) -->
                             <div class="tab-pane fade" id="adminLoginPane">
                                 <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
                                     <div class="mb-3">
                                         <label class="form-label small fw-semibold">Admin Email / Username</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                                            <input type="text" id="adminEmailInput" class="form-control" placeholder="admin@thanbeeh.com" required>
+                                            <input type="text" id="adminEmailInput" class="form-control" placeholder="admin@school.com" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-semibold">Admin Password</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
-                                            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Enter administrator password" required>
+                                            <input type="password" id="adminPasswordInput" class="form-control" placeholder="admin123" required>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold" id="adminLoginBtn">
@@ -323,7 +370,7 @@
                         </div>
                     </div>
                     <div class="card-footer bg-light text-center py-2 small text-muted">
-                        Live Cloud Sync & Offline LocalStorage Cache
+                        Auto-Synced Flat Firestore Structure & Offline Ready
                     </div>
                 </div>
             </div>
@@ -342,7 +389,7 @@
                 <i class="fa-solid fa-graduation-cap text-success fs-4"></i>
                 <div class="lh-1">
                     <div>EduSync</div>
-                    <small class="text-secondary fw-normal" style="font-size: 11px;">Exam & Results System</small>
+                    <small class="text-secondary fw-normal" style="font-size: 11px;">Exams & Attendance</small>
                 </div>
             </div>
 
@@ -358,42 +405,50 @@
                 </div>
             </div>
 
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu" id="sidebarMenu">
+                <li class="sidebar-section">Exams</li>
                 <li class="sidebar-item">
-                    <a href="javascript:void(0)" class="sidebar-link active" onclick="switchSidebarPanel('exams')">
-                        <i class="fa-solid fa-file-pen"></i>
-                        <span>Exams & Evaluation</span>
+                    <a href="javascript:void(0)" class="sidebar-link active" data-panel="exams" onclick="switchSidebarPanel('exams')" title="Manage exams and schedules">
+                        <i class="fa-solid fa-file-circle-plus"></i>
+                        <span>Exam Setup</span>
                     </a>
                 </li>
-                <!-- ADMIN ONLY MENU ITEMS -->
+                <li class="sidebar-item">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="evaluation" onclick="switchSidebarPanel('evaluation')">
+                        <i class="fa-solid fa-square-poll-vertical"></i>
+                        <span>Evaluation & Results</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="published" onclick="switchSidebarPanel('published')">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <span>Published Results</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-section admin-only-feature">Academic Setup</li>
                 <li class="sidebar-item admin-only-feature">
-                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchSidebarPanel('academicYears')">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="academicYears" onclick="switchSidebarPanel('academicYears')">
                         <i class="fa-solid fa-calendar-check"></i>
                         <span>Academic Years</span>
                     </a>
                 </li>
                 <li class="sidebar-item admin-only-feature">
-                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchSidebarPanel('students')">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="students" onclick="switchSidebarPanel('students')">
                         <i class="fa-solid fa-users"></i>
-                        <span>Student Roster</span>
+                        <span>Students</span>
                     </a>
                 </li>
                 <li class="sidebar-item admin-only-feature">
-                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchSidebarPanel('classes')">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="classes" onclick="switchSidebarPanel('classes')">
                         <i class="fa-solid fa-school"></i>
-                        <span>Class Rooms</span>
+                        <span>Classrooms</span>
                     </a>
                 </li>
                 <li class="sidebar-item admin-only-feature">
-                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchSidebarPanel('subjects')">
+                    <a href="javascript:void(0)" class="sidebar-link" data-panel="subjects" onclick="switchSidebarPanel('subjects')">
                         <i class="fa-solid fa-book-open"></i>
-                        <span>Subjects Master</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchSidebarPanel('published')">
-                        <i class="fa-solid fa-bullhorn"></i>
-                        <span>Published Results</span>
+                        <span>Subjects</span>
                     </a>
                 </li>
             </ul>
@@ -407,7 +462,7 @@
 
         <!-- MAIN VIEWPORT -->
         <main class="main-content">
-            <!-- Top Navbar with Global Academic Year Selector -->
+            <!-- Top Navbar -->
             <header class="navbar-top bg-white border-bottom px-3 py-2 d-flex flex-wrap justify-content-between align-items-center sticky-top shadow-sm gap-2">
                 <div class="d-flex align-items-center gap-3">
                     <button class="btn btn-light d-lg-none" onclick="toggleSidebar()">
@@ -417,18 +472,17 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-2 ms-auto">
-                    <!-- Academic Year Selector Dropdown -->
+                    <!-- Academic Year Selector -->
                     <div class="d-flex align-items-center gap-1 bg-light px-2 py-1 rounded border">
                         <label for="globalAcademicYearSelect" class="small fw-bold text-muted text-nowrap"><i class="fa-regular fa-calendar me-1"></i>Year:</label>
                         <select id="globalAcademicYearSelect" class="form-select form-select-sm fw-semibold border-0 bg-transparent" style="width: auto; min-width: 130px;" onchange="onGlobalAcademicYearChange()">
-                            <!-- Populated dynamically -->
                         </select>
                     </div>
 
-                    <span id="syncBadge" class="badge rounded-pill bg-secondary text-uppercase py-1 px-2">
-                        <i class="fa-solid fa-rotate fa-spin me-1"></i> Syncing...
+                    <span id="syncBadge" class="badge rounded-pill bg-success text-uppercase py-1 px-2">
+                        <i class="fa-solid fa-cloud me-1"></i> Synced
                     </span>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="forceSync()" title="Refresh & Sync">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="forceSync()" title="Refresh & On-Demand Sync">
                         <i class="fa-solid fa-rotate"></i>
                     </button>
                 </div>
@@ -438,222 +492,273 @@
 
                 <!-- ================= 1. EXAMS & EVALUATION PANEL ================= -->
                 <div id="panelExams" class="content-panel">
-                    <!-- Exam Selection Bar -->
-                    <div class="card shadow-sm border-0 rounded-3 mb-4">
+                    
+                    <!-- Horizontal Exam Sub-Tabs Header -->
+                    <div class="exam-tabs-scroll mb-3" aria-label="Exam sections">
+                    <ul class="nav nav-pills exam-horizontal-tabs gap-2" id="examSubTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="subtab-examlist" data-bs-toggle="pill" data-bs-target="#tabExamList" onclick="onSubTabOpen('exams')">
+                                <i class="fa-solid fa-list-check me-1"></i> Exams
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="subtab-schedule" data-bs-toggle="pill" data-bs-target="#tabSchedule" onclick="onSubTabOpen('schedule')">
+                                <i class="fa-regular fa-calendar-days me-1"></i> Schedule
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="subtab-marks" data-bs-toggle="pill" data-bs-target="#tabMarkEntry" onclick="onSubTabOpen('marks')">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Mark Entry
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="subtab-results" data-bs-toggle="pill" data-bs-target="#tabResults" onclick="onSubTabOpen('results')">
+                                <i class="fa-solid fa-ranking-star me-1"></i> Results
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="subtab-progress" data-bs-toggle="pill" data-bs-target="#tabProgressCards" onclick="onSubTabOpen('progress')">
+                                <i class="fa-solid fa-address-card me-1"></i> Progress Cards
+                            </button>
+                        </li>
+                    </ul>
+                    </div>
+
+                    <!-- Universal Exam & Class Context Bar -->
+                    <div class="card shadow-sm border-0 rounded-3 mb-3">
                         <div class="card-body p-3">
-                            <div class="row g-3 align-items-center">
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label small fw-semibold text-muted mb-1">Select Examination:</label>
-                                    <select id="examSelectBox" class="form-select fw-semibold" onchange="onExamSelected()">
-                                        <!-- Dynamically populated for current academic year -->
-                                    </select>
+                            <div class="row g-2 align-items-center">
+                                <div class="col-12 col-md-5">
+                                    <label class="form-label small fw-semibold text-muted mb-1">Active Exam Context:</label>
+                                    <div class="d-flex gap-2">
+                                        <select id="examSelectBox" class="form-select form-select-sm fw-semibold" onchange="onExamOrClassChanged()">
+                                            <!-- Dynamically populated -->
+                                        </select>
+                                        <button class="btn btn-sm btn-emerald text-nowrap admin-only-feature" data-bs-toggle="modal" data-bs-target="#newExamModal">
+                                            <i class="fa-solid fa-plus me-1"></i> New Exam
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-4">
-                                    <label class="form-label small fw-semibold text-muted mb-1">Select Target Class:</label>
-                                    <select id="examClassSelectBox" class="form-select fw-semibold" onchange="onClassSelected()">
+                                    <label class="form-label small fw-semibold text-muted mb-1">Target Classroom:</label>
+                                    <select id="examClassSelectBox" class="form-select form-select-sm fw-semibold" onchange="onExamOrClassChanged()">
                                         <!-- Dynamically populated -->
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-4 d-flex justify-content-md-end align-items-end gap-2 pt-2">
-                                    <button class="btn btn-emerald admin-only-feature" data-bs-toggle="modal" data-bs-target="#newExamModal">
-                                        <i class="fa-solid fa-calendar-plus me-1"></i> Add New Exam
-                                    </button>
+                                <div class="col-12 col-md-3 text-md-end pt-md-3">
+                                    <span id="examContextStatusBadge" class="badge bg-success py-2 px-3">Mark Entry Open</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Exam Status Strip -->
-                    <div id="examMetaBar" class="card shadow-sm border-0 rounded-3 mb-3 d-none">
-                        <div class="card-body p-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
-                            <div>
-                                <h5 class="fw-bold mb-1" id="currentExamTitle">Exam Title</h5>
-                                <div class="text-muted small">
-                                    Class: <span class="fw-semibold text-dark" id="currentClassTag">-</span> | 
-                                    Year: <span class="fw-semibold text-dark" id="currentYearTag">-</span> | 
-                                    Status: <span id="statusActiveBadge" class="badge bg-success">ACTIVE</span>
-                                    <span id="statusPublishedBadge" class="badge bg-primary d-none">PUBLISHED</span>
-                                    <span class="ms-2 text-muted" id="lastUpdatedLabel">Last updated: Never</span>
+                    <div class="tab-content" id="examSubTabsContent">
+                        
+                        <!-- TAB 1: EXAMS LIST & CLASS DEEP DIVE -->
+                        <div class="tab-pane fade show active" id="tabExamList">
+                            <div class="card shadow-sm border-0 rounded-3 mb-3">
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                    <span><i class="fa-solid fa-table-list text-primary me-2"></i>Examinations & Class Status Deep Dive</span>
+                                    <span class="badge bg-secondary" id="totalExamsCountBadge">0 Exams</span>
                                 </div>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="form-check form-switch me-2 admin-only-feature">
-                                    <input class="form-check-input" type="checkbox" id="examActiveToggle" onchange="toggleExamActiveStatus()">
-                                    <label class="form-check-label fw-semibold small" for="examActiveToggle">Mark Entry Active</label>
-                                </div>
-
-                                <button id="publishResultsBtn" class="btn btn-emerald px-3 admin-only-feature" onclick="publishExamResults()">
-                                    <i class="fa-solid fa-cloud-arrow-up me-1"></i> Publish & Lock
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Horizontal Sub-Tabs -->
-                    <div id="examSubTabsContainer" class="d-none">
-                        <ul class="nav nav-pills exam-horizontal-tabs mb-4 gap-2 flex-wrap" id="examSubTabs" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link active" id="subtab-schedule" data-bs-toggle="pill" data-bs-target="#tabSchedule">
-                                    <i class="fa-regular fa-calendar-days me-1"></i> 📅 Schedule & Pass Marks
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="subtab-marks" data-bs-toggle="pill" data-bs-target="#tabMarkEntry">
-                                    <i class="fa-solid fa-pen-to-square me-1"></i> 📝 Mark Entry
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="subtab-results" data-bs-toggle="pill" data-bs-target="#tabResults">
-                                    <i class="fa-solid fa-ranking-star me-1"></i> 🏆 Results & Rankings
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="subtab-progress" data-bs-toggle="pill" data-bs-target="#tabProgressCards">
-                                    <i class="fa-solid fa-address-card me-1"></i> 📇 Progress Cards
-                                </button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="examSubTabsContent">
-                            <!-- 1. SCHEDULE -->
-                            <div class="tab-pane fade show active" id="tabSchedule">
-                                <div class="card shadow-sm border-0 rounded-3">
-                                    <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
-                                        <span><i class="fa-solid fa-sliders me-1 text-primary"></i> Subject Exam Schedule & Passing Marks</span>
-                                        <button class="btn btn-sm btn-emerald admin-only-feature" onclick="saveExamScheduleRules()">
-                                            <i class="fa-solid fa-check me-1"></i> Save Schedule
-                                        </button>
-                                    </div>
+                                <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <table class="table align-middle mb-0">
+                                        <table class="table table-hover align-middle mb-0">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>Subject</th>
-                                                    <th>Exam Date</th>
-                                                    <th>Max Marks</th>
-                                                    <th>Passing Marks</th>
+                                                    <th>Exam Name</th>
+                                                    <th>Academic Year</th>
+                                                    <th>Class Breakdown & Actions</th>
+                                                    <th class="text-end">Manage</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="scheduleTableBody">
-                                                <!-- Dynamic Subjects -->
+                                            <tbody id="examDeepDiveTableBody">
+                                                <!-- Dynamic Rows -->
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- 2. MARK ENTRY -->
-                            <div class="tab-pane fade" id="tabMarkEntry">
-                                <div class="card shadow-sm border-0 rounded-3 mb-3">
-                                    <div class="card-body py-2 px-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
-                                        <div class="small text-muted">
-                                            <i class="fa-solid fa-bolt text-warning me-1"></i> Live Auto-Save to Firestore & Local Storage.
-                                        </div>
-                                        <div id="markEntryStatusText" class="badge bg-light text-dark border">
-                                            Status Indicator
-                                        </div>
+                        <!-- TAB 2: SCHEDULE & SUBJECT SELECTION -->
+                        <div class="tab-pane fade" id="tabSchedule">
+                            <div class="card shadow-sm border-0 rounded-3">
+                                <div class="card-header bg-white fw-bold py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                    <div>
+                                        <i class="fa-solid fa-sliders text-emerald me-1"></i> Exam Subject Inclusion, Dates & Pass Marks
+                                        <div class="small text-muted fw-normal">Select which subjects have exams in this term. Unselected subjects won't appear in mark sheets.</div>
                                     </div>
+                                    <button class="btn btn-sm btn-emerald admin-only-feature" onclick="saveExamScheduleRules()">
+                                        <i class="fa-solid fa-floppy-disk me-1"></i> Save Schedule Settings
+                                    </button>
                                 </div>
+                                <div class="table-responsive">
+                                    <table class="table align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 120px;" class="text-center">Include in Exam</th>
+                                                <th>Subject Name & Code</th>
+                                                <th>Exam Date</th>
+                                                <th>Max Marks</th>
+                                                <th>Passing Marks</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scheduleTableBody">
+                                            <!-- Dynamically filled with checkboxes for subjects -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-                                <div class="card shadow-sm border-0 rounded-3">
-                                    <div class="table-responsive" style="max-height: 580px; overflow-y:auto;">
-                                        <table class="table table-bordered table-hover align-middle mb-0" id="markEntryTable">
-                                            <thead class="table-light sticky-top" id="markEntryThead">
-                                                <!-- Headers -->
-                                            </thead>
-                                            <tbody id="markEntryTbody">
-                                                <!-- Student rows -->
-                                            </tbody>
-                                        </table>
+                        <!-- TAB 3: MARK & ATTENDANCE ENTRY -->
+                        <div class="tab-pane fade" id="tabMarkEntry">
+                            <!-- Top Attendance & Filter Bar -->
+                            <div class="card shadow-sm border-0 rounded-3 mb-3 bg-white">
+                                <div class="card-body p-3">
+                                    <div class="row g-3 align-items-center">
+                                        <!-- Working Days Configuration -->
+                                        <div class="col-12 col-md-3">
+                                            <label class="form-label small fw-bold text-dark mb-1">
+                                                <i class="fa-solid fa-calendar-check text-success me-1"></i> Total Working Days:
+                                            </label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" id="classWorkingDaysInput" class="form-control fw-bold text-center" placeholder="e.g. 80" min="0" onchange="onWorkingDaysChanged()">
+                                                <span class="input-group-text">days</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Multi-Subject Filter Pills -->
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label small fw-bold text-dark mb-1">
+                                                <i class="fa-solid fa-filter text-primary me-1"></i> Filter Visible Subjects:
+                                            </label>
+                                            <div id="markEntrySubjectPills" class="d-flex flex-wrap gap-1">
+                                                <!-- Dynamic Subject Filter Checkboxes -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Save All Marks Button -->
+                                        <div class="col-12 col-md-3 text-md-end">
+                                            <button id="saveAllMarksBtn" class="btn btn-emerald btn-sm w-100 py-2 fw-semibold" onclick="saveAllMarksAndAttendance()">
+                                                <i class="fa-solid fa-cloud-arrow-up me-1"></i> Save All Marks
+                                            </button>
+                                            <small id="markUnsavedBadge" class="d-block text-muted mt-1" style="font-size: 11px;">All changes synced</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- 3. RESULTS & RANKINGS -->
-                            <div class="tab-pane fade" id="tabResults">
-                                <div class="card shadow-sm border-0 rounded-3 mb-3">
-                                    <div class="card-body p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-                                        <div>
-                                            <h6 class="mb-0 fw-bold">Live Tabulation & Rank Register</h6>
-                                            <small class="text-muted">Calculates Total, Percentage, Pass/Fail status, and Dense Class Rank.</small>
-                                        </div>
+                            <!-- Mark Entry Table -->
+                            <div class="card shadow-sm border-0 rounded-3">
+                                <div class="table-responsive" style="max-height: 560px; overflow-y:auto;">
+                                    <table class="table table-bordered table-hover align-middle mb-0" id="markEntryTable">
+                                        <thead class="table-light sticky-top" id="markEntryThead">
+                                            <!-- Headers -->
+                                        </thead>
+                                        <tbody id="markEntryTbody">
+                                            <!-- Dynamic Rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4: RESULTS & AUTO-RANK -->
+                        <div class="tab-pane fade" id="tabResults">
+                            <div class="card shadow-sm border-0 rounded-3 mb-3">
+                                <div class="card-body p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Live Tabulation & Rank Register</h6>
+                                        <small class="text-muted">Calculates Total, Percentage, Absentee penalization ('AB' counts as 0), and Dense Competition Rank.</small>
+                                    </div>
+                                    <div class="d-flex gap-2">
                                         <button class="btn btn-sm btn-outline-success" onclick="exportResultsCsv()">
-                                            <i class="fa-solid fa-file-excel me-1"></i> Export Results (CSV)
+                                            <i class="fa-solid fa-file-excel me-1"></i> Export CSV
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="recalculateAndRefreshRanks()">
+                                            <i class="fa-solid fa-arrows-rotate me-1"></i> Refresh Rankings
+                                        </button>
+                                        <button id="publishResultsBtn" class="btn btn-sm btn-emerald admin-only-feature" onclick="publishExamResults()">
+                                            <i class="fa-solid fa-lock me-1"></i> Publish & Lock
                                         </button>
                                     </div>
                                 </div>
-
-                                <div class="card shadow-sm border-0 rounded-3">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover align-middle mb-0" id="classResultsTable">
-                                            <thead class="table-light" id="classResultsThead">
-                                                <!-- Headers -->
-                                            </thead>
-                                            <tbody id="classResultsTbody">
-                                                <!-- Rows -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                             </div>
 
-                            <!-- 4. PROGRESS CARDS -->
-                            <div class="tab-pane fade" id="tabProgressCards">
-                                <div class="row g-4">
-                                    <div class="col-12 col-md-4 no-print">
-                                        <div class="card shadow-sm border-0 rounded-3">
-                                            <div class="card-header bg-white fw-bold py-3">
-                                                <i class="fa-solid fa-users me-1 text-primary"></i> Select Student
-                                            </div>
-                                            <div class="p-2 border-bottom">
-                                                <input type="text" id="studentFilterInput" class="form-control form-control-sm" placeholder="Search student..." oninput="filterProgressStudentList()">
-                                            </div>
-                                            <div class="list-group list-group-flush" id="progressStudentList" style="max-height: 480px; overflow-y:auto;">
-                                                <!-- Student List -->
-                                            </div>
+                            <div class="card shadow-sm border-0 rounded-3">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="classResultsTable">
+                                        <thead class="table-light" id="classResultsThead">
+                                        </thead>
+                                        <tbody id="classResultsTbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 5: PROGRESS CARDS -->
+                        <div class="tab-pane fade" id="tabProgressCards">
+                            <div class="row g-4">
+                                <div class="col-12 col-md-4 no-print">
+                                    <div class="card shadow-sm border-0 rounded-3">
+                                        <div class="card-header bg-white fw-bold py-3">
+                                            <i class="fa-solid fa-users me-1 text-primary"></i> Select Student
+                                        </div>
+                                        <div class="p-2 border-bottom">
+                                            <input type="text" id="studentFilterInput" class="form-control form-control-sm" placeholder="Search student by name or adm no..." oninput="filterProgressStudentList()">
+                                        </div>
+                                        <div class="list-group list-group-flush" id="progressStudentList" style="max-height: 480px; overflow-y:auto;">
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-12 col-md-8">
-                                        <div class="card shadow-sm border-0 rounded-3 p-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-3 no-print actions-bar">
-                                                <h6 class="fw-bold mb-0">Progress Card Document</h6>
-                                                <div class="d-flex gap-2">
-                                                    <button class="btn btn-sm btn-outline-dark" onclick="window.print()">
-                                                        <i class="fa-solid fa-print me-1"></i> Print
-                                                    </button>
-                                                    <button class="btn btn-sm btn-primary" onclick="downloadProgressCardPdf()">
-                                                        <i class="fa-solid fa-file-pdf me-1"></i> PDF
-                                                    </button>
-                                                    <button class="btn btn-sm btn-success" onclick="downloadProgressCardPng()">
-                                                        <i class="fa-solid fa-camera me-1"></i> Save PNG
-                                                    </button>
-                                                </div>
+                                <div class="col-12 col-md-8">
+                                    <div class="card shadow-sm border-0 rounded-3 p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3 no-print actions-bar">
+                                            <h6 class="fw-bold mb-0">Progress Card Document</h6>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-dark" onclick="window.print()">
+                                                    <i class="fa-solid fa-print me-1"></i> Print
+                                                </button>
+                                                <button class="btn btn-sm btn-primary" onclick="downloadProgressCardPdf()">
+                                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF
+                                                </button>
+                                                <button class="btn btn-sm btn-success" onclick="downloadProgressCardPng()">
+                                                    <i class="fa-solid fa-camera me-1"></i> Save PNG
+                                                </button>
                                             </div>
+                                        </div>
 
-                                            <div id="printTargetContainer" class="d-flex justify-content-center">
-                                                <div id="progressCardTarget" class="progress-card-preview text-center">
-                                                    <div class="py-5 text-muted">Select a student from the left panel to preview progress card.</div>
-                                                </div>
+                                        <div id="printTargetContainer" class="d-flex justify-content-center">
+                                            <div id="progressCardTarget" class="progress-card-preview text-center">
+                                                <div class="py-5 text-muted">Select a student from the left list to preview progress card.</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
-                <!-- ================= 2. ADMIN ONLY: ACADEMIC YEARS ================= -->
+                <!-- ================= 2. ADMIN: ACADEMIC YEARS ================= -->
                 <div id="panelAcademicYears" class="content-panel d-none">
                     <div class="row g-4">
                         <div class="col-12 col-lg-4">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3">
-                                    <i class="fa-solid fa-calendar-plus text-success me-1"></i> Add Academic Year
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
+                                    <span><i class="fa-solid fa-calendar-plus text-success me-1"></i> Academic Year</span>
+                                    <button class="btn btn-sm btn-emerald" type="button" data-bs-toggle="collapse" data-bs-target="#academicYearFormPanel" aria-expanded="false" aria-controls="academicYearFormPanel">
+                                        <i class="fa-solid fa-plus me-1"></i> Add Year
+                                    </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="collapse" id="academicYearFormPanel">
+                                <div class="card-body border-top">
                                     <form id="academicYearForm" onsubmit="saveAcademicYear(event)">
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold">Academic Year Title</label>
@@ -668,14 +773,20 @@
                                         </button>
                                     </form>
                                 </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-8">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
                                     <span><i class="fa-solid fa-calendar-days me-1 text-primary"></i> Academic Years Registry</span>
-                                    <span class="badge bg-secondary" id="ayCountBadge">0 Years</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary" id="ayCountBadge">0 Years</span>
+                                        <button type="button" class="btn btn-emerald btn-add-icon" data-open-management-form="academicYear" title="Add academic year" aria-label="Add academic year">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
@@ -687,9 +798,7 @@
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="academicYearsTableBody">
-                                            <!-- Dynamically filled -->
-                                        </tbody>
+                                        <tbody id="academicYearsTableBody"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -697,15 +806,19 @@
                     </div>
                 </div>
 
-                <!-- ================= 3. ADMIN ONLY: STUDENT ROSTER ================= -->
+                <!-- ================= 3. ADMIN: STUDENT ROSTER ================= -->
                 <div id="panelStudents" class="content-panel d-none">
                     <div class="row g-4">
                         <div class="col-12 col-lg-4">
                             <div class="card shadow-sm border-0 rounded-3 mb-4">
-                                <div class="card-header bg-white fw-bold py-3">
-                                    <i class="fa-solid fa-user-plus text-success me-1"></i> Add Student Manually
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
+                                    <span><i class="fa-solid fa-user-plus text-success me-1"></i> <span id="studentFormTitle">Student</span></span>
+                                    <button class="btn btn-sm btn-emerald" type="button" data-bs-toggle="collapse" data-bs-target="#studentFormPanel" aria-expanded="false" aria-controls="studentFormPanel">
+                                        <i class="fa-solid fa-plus me-1"></i> Add Student
+                                    </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="collapse" id="studentFormPanel">
+                                <div class="card-body border-top">
                                     <form id="addStudentForm" onsubmit="saveStudentManually(event)">
                                         <div class="mb-2">
                                             <label class="form-label small fw-semibold">Admission Number</label>
@@ -726,32 +839,39 @@
                                         <div class="row g-2 mb-3">
                                             <div class="col-6">
                                                 <label class="form-label small fw-semibold">Class</label>
-                                                <select id="stuClassSelect" class="form-select form-select-sm" required>
-                                                    <!-- Dynamic classes -->
-                                                </select>
+                                                <select id="stuClassSelect" class="form-select form-select-sm" required></select>
                                             </div>
                                             <div class="col-6">
                                                 <label class="form-label small fw-semibold">Division</label>
                                                 <input type="text" id="stuDivision" class="form-control form-control-sm" placeholder="e.g. A" required>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-emerald w-100 btn-sm fw-semibold">
+                                        <button type="button" id="cancelStudentEditBtn" class="btn btn-outline-secondary w-100 btn-sm fw-semibold d-none mb-2" onclick="cancelRecordEdit('students')">
+                                            <i class="fa-solid fa-xmark me-1"></i> Cancel Edit
+                                        </button>
+                                        <button type="submit" id="studentSubmitBtn" class="btn btn-emerald w-100 btn-sm fw-semibold">
                                             <i class="fa-solid fa-floppy-disk me-1"></i> Save Student
                                         </button>
                                     </form>
                                 </div>
+                                </div>
                             </div>
 
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3">
-                                    <i class="fa-solid fa-file-csv text-primary me-1"></i> Bulk CSV Import
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
+                                    <span><i class="fa-solid fa-file-csv text-primary me-1"></i> Bulk Upload</span>
+                                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#bulkStudentUploadPanel" aria-expanded="false" aria-controls="bulkStudentUploadPanel">
+                                        <i class="fa-solid fa-upload me-1"></i> Bulk Upload
+                                    </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="collapse" id="bulkStudentUploadPanel">
+                                <div class="card-body border-top">
                                     <p class="small text-muted mb-2">CSV columns: <code>id, admission number, name, gender, class, division</code></p>
                                     <input type="file" id="rosterCsvFileInput" class="form-control form-control-sm mb-3" accept=".csv" onchange="handleRosterCsvUpload(event)">
                                     <button class="btn btn-outline-secondary w-100 btn-sm" onclick="downloadRosterCsvTemplate()">
                                         <i class="fa-solid fa-download me-1"></i> Download Template CSV
                                     </button>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -763,8 +883,14 @@
                                         <span><i class="fa-solid fa-id-card me-1 text-primary"></i> Master Student Directory</span>
                                         <span class="badge bg-secondary" id="totalStudentsCountBadge">0 Students</span>
                                     </div>
-                                    <div style="max-width: 220px;">
-                                        <input type="text" id="rosterSearchInput" class="form-control form-control-sm" placeholder="Filter roster..." oninput="renderMasterStudentsTable()">
+                                    <div class="d-flex align-items-center gap-2 ms-auto">
+                                        <input type="text" id="rosterSearchInput" class="form-control form-control-sm" style="max-width: 220px;" placeholder="Filter roster..." oninput="renderMasterStudentsTable()">
+                                        <button type="button" class="btn btn-emerald btn-add-icon" data-open-management-form="students" title="Add student" aria-label="Add student">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary btn-add-icon" data-open-management-form="bulkUpload" title="Bulk upload students" aria-label="Bulk upload students">
+                                            <i class="fa-solid fa-file-arrow-up"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="table-responsive" style="max-height: 600px; overflow-y:auto;">
@@ -778,9 +904,7 @@
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="masterStudentsTableBody">
-                                            <!-- Dynamic student rows -->
-                                        </tbody>
+                                        <tbody id="masterStudentsTableBody"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -788,15 +912,19 @@
                     </div>
                 </div>
 
-                <!-- ================= 4. ADMIN ONLY: CLASS ROOMS ================= -->
+                <!-- ================= 4. ADMIN: CLASS ROOMS ================= -->
                 <div id="panelClasses" class="content-panel d-none">
                     <div class="row g-4">
                         <div class="col-12 col-lg-4">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3">
-                                    <i class="fa-solid fa-plus-circle text-success me-1"></i> Add / Edit Class Room
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
+                                    <span><i class="fa-solid fa-plus-circle text-success me-1"></i> <span id="classFormTitle">Classroom</span></span>
+                                    <button class="btn btn-sm btn-emerald" type="button" data-bs-toggle="collapse" data-bs-target="#classroomFormPanel" aria-expanded="false" aria-controls="classroomFormPanel">
+                                        <i class="fa-solid fa-plus me-1"></i> Add Classroom
+                                    </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="collapse" id="classroomFormPanel">
+                                <div class="card-body border-top">
                                     <form id="classroomForm" onsubmit="saveClassroom(event)">
                                         <div class="mb-2">
                                             <label class="form-label small fw-semibold">Class (Standard 1 to 12)</label>
@@ -830,22 +958,30 @@
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold">Assign Subjects</label>
                                             <div id="classSubjectCheckboxes" class="p-2 border rounded bg-light" style="max-height: 140px; overflow-y:auto;">
-                                                <!-- Dynamic subjects -->
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-emerald w-100 btn-sm fw-semibold">
+                                        <button type="button" id="cancelClassEditBtn" class="btn btn-outline-secondary w-100 btn-sm fw-semibold d-none mb-2" onclick="cancelRecordEdit('classes')">
+                                            <i class="fa-solid fa-xmark me-1"></i> Cancel Edit
+                                        </button>
+                                        <button type="submit" id="classSubmitBtn" class="btn btn-emerald w-100 btn-sm fw-semibold">
                                             <i class="fa-solid fa-floppy-disk me-1"></i> Save Class Room
                                         </button>
                                     </form>
+                                </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-8">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
                                     <span><i class="fa-solid fa-school me-1 text-primary"></i> Configured Class Rooms</span>
-                                    <span class="badge bg-secondary" id="classCountBadge">0 Classes</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary" id="classCountBadge">0 Classes</span>
+                                        <button type="button" class="btn btn-emerald btn-add-icon" data-open-management-form="classes" title="Add classroom" aria-label="Add classroom">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
@@ -854,13 +990,11 @@
                                                 <th>Class & Div</th>
                                                 <th>Username</th>
                                                 <th>Password</th>
-                                                <th>Subjects</th>
+                                                <th>Assigned Subjects</th>
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="classroomsTableBody">
-                                            <!-- Dynamic rows -->
-                                        </tbody>
+                                        <tbody id="classroomsTableBody"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -868,15 +1002,19 @@
                     </div>
                 </div>
 
-                <!-- ================= 5. ADMIN ONLY: SUBJECTS ================= -->
+                <!-- ================= 5. ADMIN: SUBJECTS ================= -->
                 <div id="panelSubjects" class="content-panel d-none">
                     <div class="row g-4">
                         <div class="col-12 col-lg-4">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3">
-                                    <i class="fa-solid fa-book text-primary me-1"></i> Add Master Subject
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
+                                    <span><i class="fa-solid fa-book text-primary me-1"></i> <span id="subjectFormTitle">Subject</span></span>
+                                    <button class="btn btn-sm btn-emerald" type="button" data-bs-toggle="collapse" data-bs-target="#subjectFormPanel" aria-expanded="false" aria-controls="subjectFormPanel">
+                                        <i class="fa-solid fa-plus me-1"></i> Add Subject
+                                    </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="collapse" id="subjectFormPanel">
+                                <div class="card-body border-top">
                                     <form id="subjectForm" onsubmit="saveSubject(event)">
                                         <div class="mb-3">
                                             <label class="form-label small fw-semibold">Subject Code</label>
@@ -886,19 +1024,28 @@
                                             <label class="form-label small fw-semibold">Subject Name</label>
                                             <input type="text" id="subjectName" class="form-control form-control-sm" placeholder="e.g. Fiqh & Ahkam" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary w-100 btn-sm fw-semibold">
+                                        <button type="button" id="cancelSubjectEditBtn" class="btn btn-outline-secondary w-100 btn-sm fw-semibold d-none mb-2" onclick="cancelRecordEdit('subjects')">
+                                            <i class="fa-solid fa-xmark me-1"></i> Cancel Edit
+                                        </button>
+                                        <button type="submit" id="subjectSubmitBtn" class="btn btn-primary w-100 btn-sm fw-semibold">
                                             <i class="fa-solid fa-plus me-1"></i> Save Subject
                                         </button>
                                     </form>
+                                </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12 col-lg-8">
                             <div class="card shadow-sm border-0 rounded-3">
-                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center gap-2">
                                     <span><i class="fa-solid fa-list-check me-1 text-primary"></i> Master Subject Directory</span>
-                                    <span class="badge bg-secondary" id="subjectCountBadge">0 Subjects</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary" id="subjectCountBadge">0 Subjects</span>
+                                        <button type="button" class="btn btn-emerald btn-add-icon" data-open-management-form="subjects" title="Add subject" aria-label="Add subject">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
@@ -909,9 +1056,7 @@
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="subjectsTableBody">
-                                            <!-- Dynamic rows -->
-                                        </tbody>
+                                        <tbody id="subjectsTableBody"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -919,7 +1064,7 @@
                     </div>
                 </div>
 
-                <!-- ================= 6. PUBLISHED RESULTS ARCHIVE ================= -->
+                <!-- ================= 6. PUBLISHED ARCHIVE ================= -->
                 <div id="panelPublished" class="content-panel d-none">
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
@@ -939,9 +1084,7 @@
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="publishedSnapshotsTbody">
-                                    <!-- Dynamic records -->
-                                </tbody>
+                                <tbody id="publishedSnapshotsTbody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -961,6 +1104,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="newExamForm" onsubmit="saveNewExam(event)">
+                        <div class="fw-bold fs-5 mb-3" id="examModalTitle">Create Exam</div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Exam Title</label>
                             <input type="text" id="newExamName" class="form-control" placeholder="e.g. Midterm Examination" required>
@@ -973,7 +1117,8 @@
                             <input class="form-check-input" type="checkbox" id="newExamActive" checked>
                             <label class="form-check-label fw-semibold small" for="newExamActive">Mark Entry Active</label>
                         </div>
-                        <button type="submit" class="btn btn-emerald w-100">Save Exam</button>
+                        <button type="button" class="btn btn-outline-secondary w-100 mb-2 d-none" id="cancelExamEditBtn" onclick="cancelRecordEdit('exams')">Cancel Edit</button>
+                        <button type="submit" class="btn btn-emerald w-100" id="examSubmitBtn">Save Exam</button>
                     </form>
                 </div>
             </div>
@@ -988,54 +1133,52 @@
             collection, 
             doc, 
             setDoc, 
+            getDoc, 
             getDocs, 
-            deleteDoc,
             query,
-            where
+            where,
+            writeBatch
         } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyABcd8PIcjwIvDqFaLlNHpb8j-TE2Hi9YA",
-            authDomain: "thanbeeh-e61d9.firebaseapp.com",
-            projectId: "thanbeeh-e61d9",
-            storageBucket: "thanbeeh-e61d9.appspot.com",
-            messagingSenderId: "1072993385928",
-            appId: "1:1072993385928:web:7279146f96c0410dd5d4fd"
-        };
+    apiKey: "AIzaSyAnhG66jCmzzRQs24rO6fUxPNjugkZeyfU",
+    authDomain: "hidayathulmumineen.firebaseapp.com",
+    projectId: "hidayathulmumineen",
+    storageBucket: "hidayathulmumineen.firebasestorage.app",
+    messagingSenderId: "953288417661",
+    appId: "1:953288417661:web:09050a3ec899fb28edac14",
+    measurementId: "G-B1Q5MS2HJV"
+  };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Core Global State
+        // Global State
         window.DB_STATE = {
-            currentUser: null,       // { role: 'admin', name, email } or { role: 'class', classId, class, division }
+            currentUser: null,
             selectedAcademicYear: null,
-            academic_years: {},      // yearId -> { id, year, isActive, lastUpdated }
-            classes: {},             // classId -> { id, academicYear, class, division, username, password, subjects: [], lastUpdated }
-            subjects: {},            // code -> { code, name, lastUpdated }
-            exams: {},               // examId -> { id, academicYear, name, active, published, schedules: {}, lastUpdated }
-            students: {},            // studentId -> { id, academicYear, adNumber, name, gender, class, division, lastUpdated }
-            marks: {},               // compositeKey -> { id, academicYear, scores: {}, lastUpdated }
-            published_results: {}    // snapshotKey -> { id, academicYear, examId, classId, results: [], lastUpdated }
+            academic_years: {},
+            classes: {},
+            subjects: {},
+            exams: {},
+            students: {},
+            exam_marks: {},          // docId: `${academicYear}_${examId}_${adnumber}`
+            published_results: {},
+            selectedSubjectFilters: new Set()
         };
 
         window.F_DB = db;
-        window.F_OPS = { collection, doc, setDoc, getDocs, deleteDoc, query, where };
+        window.F_OPS = { collection, doc, setDoc, getDoc, getDocs, query, where, writeBatch };
 
         window.addEventListener('DOMContentLoaded', async () => {
             loadLocalCache();
-            await syncBidirectional();
+            await fetchOnDemand(['academic_years', 'classes', 'subjects', 'exams', 'students']);
             initAcademicYears();
-
-            // Periodic sync every 12 seconds
-            setInterval(async () => {
-                await syncBidirectional();
-            }, 12000);
         });
 
         window.loadLocalCache = function() {
             try {
-                const raw = localStorage.getItem('EDUSYNC_STORE_PROD');
+                const raw = localStorage.getItem('EDUSYNC_STORE_V2');
                 if (raw) {
                     const parsed = JSON.parse(raw);
                     window.DB_STATE.academic_years = parsed.academic_years || {};
@@ -1043,81 +1186,74 @@
                     window.DB_STATE.subjects = parsed.subjects || {};
                     window.DB_STATE.exams = parsed.exams || {};
                     window.DB_STATE.students = parsed.students || {};
-                    window.DB_STATE.marks = parsed.marks || {};
+                    window.DB_STATE.exam_marks = parsed.exam_marks || {};
                     window.DB_STATE.published_results = parsed.published_results || {};
                     window.DB_STATE.selectedAcademicYear = parsed.selectedAcademicYear || null;
                 }
             } catch (err) {
-                console.error("Local storage load error", err);
+                console.warn("Local storage cache load error", err);
             }
         };
 
         window.saveLocalCache = function() {
             try {
-                localStorage.setItem('EDUSYNC_STORE_PROD', JSON.stringify({
+                localStorage.setItem('EDUSYNC_STORE_V2', JSON.stringify({
                     academic_years: window.DB_STATE.academic_years,
                     classes: window.DB_STATE.classes,
                     subjects: window.DB_STATE.subjects,
                     exams: window.DB_STATE.exams,
                     students: window.DB_STATE.students,
-                    marks: window.DB_STATE.marks,
+                    exam_marks: window.DB_STATE.exam_marks,
                     published_results: window.DB_STATE.published_results,
                     selectedAcademicYear: window.DB_STATE.selectedAcademicYear
                 }));
             } catch (err) {
-                console.error("Failed saving to local storage", err);
+                console.warn("Failed saving cache", err);
             }
         };
 
-        // Bidirectional Sync resolving timestamps
-        window.syncBidirectional = async function() {
-            updateSyncStatus('syncing', 'Syncing...');
+        // On-Demand Cloud Fetcher per collection without active timers
+        window.fetchOnDemand = async function(collectionNames) {
+            updateSyncBadge('syncing', 'Syncing...');
             try {
-                const collections = ['academic_years', 'classes', 'subjects', 'exams', 'students', 'exam_marks', 'published_results'];
-
-                for (const colName of collections) {
+                for (const colName of collectionNames) {
                     const snap = await getDocs(collection(db, colName));
-                    const stateTarget = colName === 'exam_marks' ? 'marks' : colName;
-
-                    snap.forEach(docSnap => {
-                        const cloudData = docSnap.data();
-                        const docId = docSnap.id;
+                    snap.forEach(d => {
+                        const cloudData = d.data();
+                        if (cloudData.isDeleted) {
+                            delete window.DB_STATE[colName][d.id];
+                            return;
+                        }
                         const cloudTime = cloudData.lastUpdated || 0;
-                        const localTime = (window.DB_STATE[stateTarget][docId] && window.DB_STATE[stateTarget][docId].lastUpdated) || 0;
-
+                        const localTime = (window.DB_STATE[colName][d.id] && window.DB_STATE[colName][d.id].lastUpdated) || 0;
                         if (cloudTime >= localTime) {
-                            window.DB_STATE[stateTarget][docId] = cloudData;
-                        } else {
-                            // Local newer -> push to cloud
-                            setDoc(doc(db, colName, docId), window.DB_STATE[stateTarget][docId]);
+                            window.DB_STATE[colName][d.id] = cloudData;
                         }
                     });
                 }
-
                 saveLocalCache();
-                updateSyncStatus('online', 'Synced & Live');
-                refreshActivePanels();
+                updateSyncBadge('online', 'Synced');
             } catch (e) {
-                console.warn("Offline or sync note:", e);
-                updateSyncStatus('offline', 'Offline (Local)');
+                console.warn("Fetch note (offline or permission):", e);
+                updateSyncBadge('offline', 'Local Cache');
             }
         };
 
         window.pushDocumentToCloud = async function(colName, docId, data) {
             data.lastUpdated = Date.now();
-            const stateTarget = colName === 'exam_marks' ? 'marks' : colName;
-            window.DB_STATE[stateTarget][docId] = data;
+            data.isDeleted = data.isDeleted || false;
+            window.DB_STATE[colName][docId] = data;
             saveLocalCache();
             try {
                 await setDoc(doc(db, colName, docId), data);
-                updateSyncStatus('online', 'Synced');
+                updateSyncBadge('online', 'Synced');
             } catch (err) {
-                console.warn("Cached locally, cloud push queued:", err);
-                updateSyncStatus('offline', 'Saved Locally');
+                console.warn("Cloud push queued locally:", err);
+                updateSyncBadge('offline', 'Saved Locally');
             }
         };
 
-        function updateSyncStatus(mode, label) {
+        function updateSyncBadge(mode, label) {
             const badge = document.getElementById('syncBadge');
             if (!badge) return;
             if (mode === 'syncing') {
@@ -1137,7 +1273,7 @@
     <script>
         // ======================= ACADEMIC YEAR LOGIC =======================
         function initAcademicYears() {
-            const years = Object.values(window.DB_STATE.academic_years);
+            const years = Object.values(window.DB_STATE.academic_years).filter(y => !y.isDeleted);
             const selectEl = document.getElementById('globalAcademicYearSelect');
             selectEl.innerHTML = '';
 
@@ -1148,7 +1284,6 @@
                 selectEl.appendChild(opt);
                 window.DB_STATE.selectedAcademicYear = null;
             } else {
-                // Find active year
                 const activeYear = years.find(y => y.isActive) || years[0];
                 if (!window.DB_STATE.selectedAcademicYear || !window.DB_STATE.academic_years[window.DB_STATE.selectedAcademicYear]) {
                     window.DB_STATE.selectedAcademicYear = activeYear.id;
@@ -1172,11 +1307,12 @@
             renderExamSelectOptions();
         }
 
-        function onGlobalAcademicYearChange() {
+        async function onGlobalAcademicYearChange() {
             const val = document.getElementById('globalAcademicYearSelect').value;
             window.DB_STATE.selectedAcademicYear = val;
             window.saveLocalCache();
-            showToast(`Switched Academic Year to: ${val}`);
+            showToast(`Academic Year changed to: ${val}`);
+            await fetchOnDemand(['exams', 'classes', 'students', 'exam_marks']);
             refreshActivePanels();
         }
 
@@ -1187,9 +1323,8 @@
             const yearId = title.replace(/\s+/g, '_');
 
             if (isActive) {
-                // deactivate others
                 Object.values(window.DB_STATE.academic_years).forEach(ay => {
-                    if (ay.isActive) {
+                    if (ay.isActive && !ay.isDeleted) {
                         ay.isActive = false;
                         ay.lastUpdated = Date.now();
                         window.pushDocumentToCloud('academic_years', ay.id, ay);
@@ -1201,6 +1336,7 @@
                 id: yearId,
                 year: title,
                 isActive: isActive,
+                isDeleted: false,
                 lastUpdated: Date.now()
             };
 
@@ -1208,18 +1344,19 @@
             document.getElementById('academicYearForm').reset();
             window.DB_STATE.selectedAcademicYear = yearId;
             initAcademicYears();
-            showToast(`Academic Year "${title}" saved successfully.`);
+            showToast(`Academic Year "${title}" saved.`);
+            window.closeManagementForm?.('academicYear');
         }
 
         function renderAcademicYearsTable() {
             const tbody = document.getElementById('academicYearsTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            const list = Object.values(window.DB_STATE.academic_years);
+            const list = Object.values(window.DB_STATE.academic_years).filter(y => !y.isDeleted);
             document.getElementById('ayCountBadge').innerText = `${list.length} Years`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No academic years configured. Please create one to start.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No academic years configured.</td></tr>`;
                 return;
             }
 
@@ -1231,7 +1368,7 @@
                     <td>${item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString() : 'N/A'}</td>
                     <td class="text-end">
                         ${!item.isActive ? `<button class="btn btn-sm btn-outline-success me-1" onclick="setActiveYear('${item.id}')">Make Active</button>` : ''}
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAcademicYear('${item.id}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="softDeleteDocument('academic_years', '${item.id}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1240,24 +1377,15 @@
 
         async function setActiveYear(id) {
             Object.values(window.DB_STATE.academic_years).forEach(ay => {
-                ay.isActive = (ay.id === id);
-                ay.lastUpdated = Date.now();
-                window.pushDocumentToCloud('academic_years', ay.id, ay);
+                if (!ay.isDeleted) {
+                    ay.isActive = (ay.id === id);
+                    ay.lastUpdated = Date.now();
+                    window.pushDocumentToCloud('academic_years', ay.id, ay);
+                }
             });
             window.DB_STATE.selectedAcademicYear = id;
             initAcademicYears();
             showToast("Default active year updated.");
-        }
-
-        async function deleteAcademicYear(id) {
-            if (!confirm(`Are you sure you want to delete academic year ${id}?`)) return;
-            delete window.DB_STATE.academic_years[id];
-            window.saveLocalCache();
-            try {
-                await window.F_OPS.deleteDoc(window.F_OPS.doc(window.F_DB, "academic_years", id));
-            } catch (e) { console.warn(e); }
-            initAcademicYears();
-            showToast("Academic year removed.");
         }
 
         // ======================= AUTHENTICATION =======================
@@ -1268,10 +1396,9 @@
             const passInput = document.getElementById('adminPasswordInput').value.trim();
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Verifying...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Checking...`;
 
             try {
-                // 1. Fetch from Firestore collection 'users'
                 const usersRef = window.F_OPS.collection(window.F_DB, "users");
                 const q = window.F_OPS.query(usersRef, window.F_OPS.where("email", "==", emailInput));
                 const snap = await window.F_OPS.getDocs(q);
@@ -1279,22 +1406,22 @@
                 let matchedUser = null;
                 snap.forEach(d => {
                     const data = d.data();
-                    if (data.password === passInput) {
+                    if (data.password === passInput && !data.isDeleted) {
                         matchedUser = data;
                     }
                 });
 
-                // If collection 'users' is completely empty, allow initial bootstrap fallback
+                // Auto fallback if empty database
                 if (!matchedUser) {
                     const allUsersSnap = await window.F_OPS.getDocs(usersRef);
-                    if (allUsersSnap.empty && emailInput === 'admin@thanbeeh.com' && passInput === 'admin123') {
-                        matchedUser = { email: emailInput, name: 'Super Admin', role: 'admin' };
-                        // Persist bootstrap admin into 'users'
+                    if (allUsersSnap.empty && emailInput === 'admin@school.com' && passInput === 'admin123') {
+                        matchedUser = { email: emailInput, name: 'Administrator', role: 'admin' };
                         await window.F_OPS.setDoc(window.F_OPS.doc(window.F_DB, "users", "admin_root"), {
                             email: emailInput,
-                            name: 'Super Admin',
+                            name: 'Administrator',
                             password: passInput,
                             role: 'admin',
+                            isDeleted: false,
                             lastUpdated: Date.now()
                         });
                     }
@@ -1305,7 +1432,7 @@
                     setupDashboardView();
                     showToast(`Welcome, ${window.DB_STATE.currentUser.name}`);
                 } else {
-                    showToast("Invalid Admin credentials in Firestore users collection.");
+                    showToast("Invalid credentials in Firestore users collection.");
                 }
             } catch (err) {
                 console.error("Login verification error:", err);
@@ -1321,8 +1448,7 @@
             const u = document.getElementById('classUsernameInput').value.trim();
             const p = document.getElementById('classPasswordInput').value.trim();
 
-            // Match against classes in DB_STATE
-            const target = Object.values(window.DB_STATE.classes).find(c => c.username === u && c.password === p);
+            const target = Object.values(window.DB_STATE.classes).find(c => !c.isDeleted && c.username === u && c.password === p);
             if (target) {
                 window.DB_STATE.currentUser = {
                     role: 'class',
@@ -1378,51 +1504,86 @@
             document.getElementById('sidebarBackdrop').classList.toggle('show');
         }
 
-        function switchSidebarPanel(panelName) {
+        const sidebarPanels = {
+            exams: {
+                title: 'Exam Setup & Schedule',
+                elementId: 'panelExams',
+                collections: ['exams', 'classes', 'students', 'exam_marks'],
+                onOpen() {
+                    onExamOrClassChanged();
+                    bootstrap.Tab.getOrCreateInstance(document.getElementById('subtab-examlist')).show();
+                }
+            },
+            evaluation: {
+                title: 'Evaluation & Results',
+                elementId: 'panelExams',
+                collections: ['exams', 'classes', 'students', 'exam_marks'],
+                onOpen() {
+                    onExamOrClassChanged();
+                    bootstrap.Tab.getOrCreateInstance(document.getElementById('subtab-marks')).show();
+                }
+            },
+            academicYears: {
+                title: 'Academic Years Management',
+                elementId: 'panelAcademicYears',
+                collections: ['academic_years'],
+                onOpen: renderAcademicYearsTable
+            },
+            students: {
+                title: 'Student Management',
+                elementId: 'panelStudents',
+                collections: ['students'],
+                onOpen: renderMasterStudentsTable
+            },
+            classes: {
+                title: 'Classroom Management',
+                elementId: 'panelClasses',
+                collections: ['classes', 'subjects'],
+                onOpen() {
+                    renderClassroomsTable();
+                    renderClassSubjectCheckboxes();
+                }
+            },
+            subjects: {
+                title: 'Subject Management',
+                elementId: 'panelSubjects',
+                collections: ['subjects'],
+                onOpen: renderSubjectsTable
+            },
+            published: {
+                title: 'Published Results Archive',
+                elementId: 'panelPublished',
+                collections: ['published_results'],
+                onOpen: renderPublishedArchive
+            }
+        };
+
+        async function switchSidebarPanel(panelName) {
+            const config = sidebarPanels[panelName];
+            if (!config) {
+                showToast(`Module "${panelName}" is not configured.`);
+                return;
+            }
+
             document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
             document.querySelectorAll('.content-panel').forEach(p => p.classList.add('d-none'));
 
-            const titleMap = {
-                'exams': 'Exams & Evaluation',
-                'academicYears': 'Academic Years Management',
-                'students': 'Student Roster Directory',
-                'classes': 'Class Rooms & Teacher Credentials',
-                'subjects': 'Master Subjects',
-                'published': 'Published Results Archive'
-            };
-
-            document.getElementById('pageHeadingTitle').innerText = titleMap[panelName] || 'Dashboard';
-
-            if (panelName === 'exams') {
-                document.getElementById('panelExams').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'exams'"]`).classList.add('active');
-                onExamSelected();
-            } else if (panelName === 'academicYears') {
-                document.getElementById('panelAcademicYears').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'academicYears'"]`).classList.add('active');
-                renderAcademicYearsTable();
-            } else if (panelName === 'students') {
-                document.getElementById('panelStudents').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'students'"]`).classList.add('active');
-                renderMasterStudentsTable();
-            } else if (panelName === 'classes') {
-                document.getElementById('panelClasses').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'classes'"]`).classList.add('active');
-                renderClassroomsTable();
-                renderClassSubjectCheckboxes();
-            } else if (panelName === 'subjects') {
-                document.getElementById('panelSubjects').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'subjects'"]`).classList.add('active');
-                renderSubjectsTable();
-            } else if (panelName === 'published') {
-                document.getElementById('panelPublished').classList.remove('d-none');
-                document.querySelector(`.sidebar-link[onclick*="'published'"]`).classList.add('active');
-                renderPublishedArchive();
-            }
+            document.getElementById('pageHeadingTitle').innerText = config.title;
+            document.querySelector(`.sidebar-link[data-panel="${panelName}"]`)?.classList.add('active');
+            document.getElementById(config.elementId).classList.remove('d-none');
+            await window.fetchOnDemand(config.collections);
+            config.onOpen();
 
             if (window.innerWidth < 992) {
                 document.getElementById('appSidebar').classList.remove('show');
                 document.getElementById('sidebarBackdrop').classList.remove('show');
+            }
+        }
+
+        async function onSubTabOpen(subtab) {
+            if (subtab === 'marks' || subtab === 'results' || subtab === 'progress') {
+                await window.fetchOnDemand(['exam_marks']);
+                onExamOrClassChanged();
             }
         }
 
@@ -1464,14 +1625,16 @@
                 gender: gender,
                 class: cls,
                 division: div,
+                isDeleted: false,
                 lastUpdated: Date.now()
             };
 
             await window.pushDocumentToCloud('students', studentId, studentObj);
             document.getElementById('addStudentForm').reset();
             renderMasterStudentsTable();
-            showToast(`Student #${ad} saved.`);
-            onExamSelected();
+            showToast(`Student #${ad} registered.`);
+            onExamOrClassChanged();
+            window.closeManagementForm?.('students');
         }
 
         function renderMasterStudentsTable() {
@@ -1481,7 +1644,7 @@
 
             const ay = window.DB_STATE.selectedAcademicYear;
             const filter = (document.getElementById('rosterSearchInput').value || '').toLowerCase();
-            const students = Object.values(window.DB_STATE.students).filter(s => !ay || s.academicYear === ay);
+            const students = Object.values(window.DB_STATE.students).filter(s => !s.isDeleted && (!ay || s.academicYear === ay));
             document.getElementById('totalStudentsCountBadge').innerText = `${students.length} Students`;
 
             const filtered = students.filter(s => 
@@ -1503,25 +1666,16 @@
                     <td><span class="badge ${st.gender === 'Female' ? 'bg-info text-dark' : 'bg-secondary'}">${st.gender || 'N/A'}</span></td>
                     <td>Class ${st.class} - ${st.division}</td>
                     <td class="text-end">
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent('${st.id}')">
+                        <button class="btn btn-sm btn-outline-primary me-1" title="Edit student" aria-label="Edit student" onclick="editRecord('students', '${st.id}')">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="softDeleteDocument('students', '${st.id}')">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        async function deleteStudent(studentId) {
-            if (!confirm("Are you sure you want to delete this student record?")) return;
-            delete window.DB_STATE.students[studentId];
-            window.saveLocalCache();
-            try {
-                await window.F_OPS.deleteDoc(window.F_OPS.doc(window.F_DB, "students", studentId));
-            } catch (e) { console.warn(e); }
-            renderMasterStudentsTable();
-            onExamSelected();
-            showToast("Student deleted.");
         }
 
         function downloadRosterCsvTemplate() {
@@ -1560,16 +1714,17 @@
 
                         if (ad && name) {
                             const studentId = `STU_${ay}_${ad}`;
-                            const stObj = { id: studentId, academicYear: ay, adNumber: ad, name, gender, class: cls, division: div, lastUpdated: Date.now() };
+                            const stObj = { id: studentId, academicYear: ay, adNumber: ad, name, gender, class: cls, division: div, isDeleted: false, lastUpdated: Date.now() };
                             await window.pushDocumentToCloud('students', studentId, stObj);
                             count++;
                         }
                     }
 
-                    showToast(`Successfully imported ${count} students from CSV.`);
+                    showToast(`Imported ${count} students from CSV.`);
                     renderMasterStudentsTable();
-                    onExamSelected();
+                    onExamOrClassChanged();
                     document.getElementById('rosterCsvFileInput').value = '';
+                    window.closeManagementForm?.('bulkUpload');
                 }
             });
         }
@@ -1579,7 +1734,7 @@
             const container = document.getElementById('classSubjectCheckboxes');
             if (!container) return;
             container.innerHTML = '';
-            const subs = Object.values(window.DB_STATE.subjects);
+            const subs = Object.values(window.DB_STATE.subjects).filter(s => !s.isDeleted);
             if (subs.length === 0) {
                 container.innerHTML = '<span class="text-muted small">No subjects defined in Subjects Master.</span>';
                 return;
@@ -1620,6 +1775,7 @@
                 username: user,
                 password: pass,
                 subjects: selectedSubs,
+                isDeleted: false,
                 lastUpdated: Date.now()
             };
 
@@ -1628,6 +1784,7 @@
             document.getElementById('classroomForm').reset();
             renderClassroomsTable();
             renderExamSelectOptions();
+            window.closeManagementForm?.('classes');
         }
 
         function renderClassroomsTable() {
@@ -1635,11 +1792,11 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             const ay = window.DB_STATE.selectedAcademicYear;
-            const list = Object.values(window.DB_STATE.classes).filter(c => !ay || c.academicYear === ay);
+            const list = Object.values(window.DB_STATE.classes).filter(c => !c.isDeleted && (!ay || c.academicYear === ay));
             document.getElementById('classCountBadge').innerText = `${list.length} Classes`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No classrooms configured for current academic year.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No classrooms configured for current year.</td></tr>`;
                 return;
             }
 
@@ -1652,7 +1809,10 @@
                     <td><code>${c.password}</code></td>
                     <td>${subBadges || '<span class="text-muted small">None</span>'}</td>
                     <td class="text-end">
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteClassroom('${c.id}')">
+                        <button class="btn btn-sm btn-outline-primary me-1" title="Edit classroom" aria-label="Edit classroom" onclick="editRecord('classes', '${c.id}')">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="softDeleteDocument('classes', '${c.id}')">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -1661,36 +1821,25 @@
             });
         }
 
-        async function deleteClassroom(id) {
-            if (!confirm("Delete classroom?")) return;
-            delete window.DB_STATE.classes[id];
-            window.saveLocalCache();
-            try {
-                await window.F_OPS.deleteDoc(window.F_OPS.doc(window.F_DB, "classes", id));
-            } catch (e) { console.warn(e); }
-            renderClassroomsTable();
-            renderExamSelectOptions();
-            showToast("Classroom deleted.");
-        }
-
         async function saveSubject(event) {
             event.preventDefault();
             const code = document.getElementById('subjectCode').value.trim().toUpperCase();
             const name = document.getElementById('subjectName').value.trim();
 
-            const subObj = { code, name, lastUpdated: Date.now() };
+            const subObj = { code, name, isDeleted: false, lastUpdated: Date.now() };
             await window.pushDocumentToCloud('subjects', code, subObj);
             showToast(`Subject ${name} created.`);
             document.getElementById('subjectForm').reset();
             renderSubjectsTable();
             renderClassSubjectCheckboxes();
+            window.closeManagementForm?.('subjects');
         }
 
         function renderSubjectsTable() {
             const tbody = document.getElementById('subjectsTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            const list = Object.values(window.DB_STATE.subjects);
+            const list = Object.values(window.DB_STATE.subjects).filter(s => !s.isDeleted);
             document.getElementById('subjectCountBadge').innerText = `${list.length} Subjects`;
 
             if (list.length === 0) {
@@ -1704,25 +1853,16 @@
                     <td><strong>${s.code}</strong></td>
                     <td>${s.name}</td>
                     <td class="text-end">
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject('${s.code}')">
+                        <button class="btn btn-sm btn-outline-primary me-1" title="Edit subject" aria-label="Edit subject" onclick="editRecord('subjects', '${s.code}')">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="softDeleteDocument('subjects', '${s.code}')">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        async function deleteSubject(code) {
-            if (!confirm("Delete subject?")) return;
-            delete window.DB_STATE.subjects[code];
-            window.saveLocalCache();
-            try {
-                await window.F_OPS.deleteDoc(window.F_OPS.doc(window.F_DB, "subjects", code));
-            } catch (e) { console.warn(e); }
-            renderSubjectsTable();
-            renderClassSubjectCheckboxes();
-            showToast("Subject removed.");
         }
 
         // ======================= EXAMS & EVALUATION =======================
@@ -1735,7 +1875,7 @@
             classSelect.innerHTML = '';
 
             const ay = window.DB_STATE.selectedAcademicYear;
-            const exams = Object.values(window.DB_STATE.exams).filter(e => !ay || e.academicYear === ay);
+            const exams = Object.values(window.DB_STATE.exams).filter(e => !e.isDeleted && (!ay || e.academicYear === ay));
             
             document.getElementById('newExamYearDisplay').value = ay || "No Year Selected";
 
@@ -1747,7 +1887,7 @@
             });
 
             const user = window.DB_STATE.currentUser;
-            let classes = Object.values(window.DB_STATE.classes).filter(c => !ay || c.academicYear === ay);
+            let classes = Object.values(window.DB_STATE.classes).filter(c => !c.isDeleted && (!ay || c.academicYear === ay));
             if (user && user.role === 'class') {
                 classes = classes.filter(c => c.id === user.classId);
             }
@@ -1759,7 +1899,8 @@
                 classSelect.appendChild(opt);
             });
 
-            onExamSelected();
+            renderExamDeepDiveTable();
+            onExamOrClassChanged();
         }
 
         async function saveNewExam(event) {
@@ -1779,8 +1920,9 @@
                 academicYear: ay,
                 name: name,
                 active: active,
-                published: false,
-                schedules: {},
+                classStatus: {},     // classId -> { active: boolean, published: boolean, workingDays: number }
+                schedules: {},       // classId -> { subCode: { included: boolean, date: '', maxMark: 100, passMark: 35 } }
+                isDeleted: false,
                 lastUpdated: Date.now()
             };
 
@@ -1791,54 +1933,38 @@
             showToast("Exam created successfully.");
         }
 
-        function onExamSelected() {
+        function onExamOrClassChanged() {
             const examId = document.getElementById('examSelectBox').value;
             const classId = document.getElementById('examClassSelectBox').value;
 
-            if (!examId || !classId) {
-                document.getElementById('examMetaBar').classList.add('d-none');
-                document.getElementById('examSubTabsContainer').classList.add('d-none');
-                return;
-            }
+            if (!examId || !classId) return;
 
             const exam = window.DB_STATE.exams[examId];
             const cls = window.DB_STATE.classes[classId];
 
-            if (!exam || !cls) {
-                document.getElementById('examMetaBar').classList.add('d-none');
-                document.getElementById('examSubTabsContainer').classList.add('d-none');
-                return;
-            }
+            if (!exam || !cls) return;
 
-            document.getElementById('examMetaBar').classList.remove('d-none');
-            document.getElementById('examSubTabsContainer').classList.remove('d-none');
+            // Class status determination
+            const classStatus = (exam.classStatus && exam.classStatus[cls.id]) || { active: exam.active ?? true, published: false, workingDays: 0 };
+            const statusBadge = document.getElementById('examContextStatusBadge');
 
-            document.getElementById('currentExamTitle').innerText = exam.name;
-            document.getElementById('currentClassTag').innerText = `${cls.class} - ${cls.division}`;
-            document.getElementById('currentYearTag').innerText = exam.academicYear || '-';
-
-            const activeBadge = document.getElementById('statusActiveBadge');
-            const pubBadge = document.getElementById('statusPublishedBadge');
-            const activeToggle = document.getElementById('examActiveToggle');
-
-            activeToggle.checked = exam.active;
-            if (exam.active) {
-                activeBadge.className = "badge bg-success";
-                activeBadge.innerText = "ACTIVE (Mark Entry Open)";
-                document.getElementById('markEntryStatusText').className = "badge bg-success-subtle text-success border border-success";
-                document.getElementById('markEntryStatusText').innerText = "Mark Entry Active";
+            if (classStatus.published) {
+                statusBadge.className = "badge bg-primary py-2 px-3";
+                statusBadge.innerHTML = `<i class="fa-solid fa-lock me-1"></i> Published & Locked`;
+            } else if (classStatus.active) {
+                statusBadge.className = "badge bg-success py-2 px-3";
+                statusBadge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> Active (Mark Entry Open)`;
             } else {
-                activeBadge.className = "badge bg-secondary";
-                activeBadge.innerText = "INACTIVE (Locked)";
-                document.getElementById('markEntryStatusText').className = "badge bg-danger-subtle text-danger border border-danger";
-                document.getElementById('markEntryStatusText').innerText = "Mark Entry Disabled / Locked";
+                statusBadge.className = "badge bg-secondary py-2 px-3";
+                statusBadge.innerHTML = `<i class="fa-solid fa-circle-pause me-1"></i> Inactive (Mark Entry Paused)`;
             }
 
-            if (exam.published) pubBadge.classList.remove('d-none');
-            else pubBadge.classList.add('d-none');
-
-            const lastUp = exam.lastUpdated ? new Date(exam.lastUpdated).toLocaleString() : 'Never';
-            document.getElementById('lastUpdatedLabel').innerText = `Last updated: ${lastUp}`;
+            // Sync Working Days Input
+            const wdInput = document.getElementById('classWorkingDaysInput');
+            if (wdInput) {
+                wdInput.value = classStatus.workingDays || '';
+                wdInput.disabled = classStatus.published;
+            }
 
             renderScheduleTab(exam, cls);
             renderMarkEntryTab(exam, cls);
@@ -1846,27 +1972,89 @@
             renderProgressTab(exam, cls);
         }
 
-        function onClassSelected() {
-            onExamSelected();
+        // ======================= DEEP DIVE EXAMS TABLE =======================
+        function renderExamDeepDiveTable() {
+            const tbody = document.getElementById('examDeepDiveTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const ay = window.DB_STATE.selectedAcademicYear;
+            const exams = Object.values(window.DB_STATE.exams).filter(e => !e.isDeleted && (!ay || e.academicYear === ay));
+            const classes = Object.values(window.DB_STATE.classes).filter(c => !c.isDeleted && (!ay || c.academicYear === ay));
+
+            document.getElementById('totalExamsCountBadge').innerText = `${exams.length} Exams`;
+
+            if (exams.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No exams created for this academic year.</td></tr>`;
+                return;
+            }
+
+            exams.forEach(ex => {
+                let classPills = classes.map(cls => {
+                    const cStat = (ex.classStatus && ex.classStatus[cls.id]) || { active: ex.active ?? true, published: false };
+                    const isPub = cStat.published;
+                    const isAct = cStat.active;
+
+                    return `
+                        <div class="d-inline-flex align-items-center gap-1 border p-1 rounded bg-light me-1 mb-1" style="font-size: 11px;">
+                            <strong>${cls.class}-${cls.division}</strong>:
+                            <span class="badge ${isPub ? 'bg-primary' : (isAct ? 'bg-success' : 'bg-secondary')}">
+                                ${isPub ? 'Published' : (isAct ? 'Active' : 'Paused')}
+                            </span>
+                            <button class="btn btn-xs btn-outline-dark py-0 px-1" title="Select this class" onclick="jumpToExamClass('${ex.id}', '${cls.id}')">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${ex.name}</strong></td>
+                    <td><span class="badge bg-light text-dark border">${ex.academicYear}</span></td>
+                    <td>${classPills || '<span class="text-muted small">No classes</span>'}</td>
+                    <td class="text-end">
+                        ${window.DB_STATE.currentUser?.role === 'admin' ? `
+                            <button class="btn btn-sm btn-outline-primary me-1" title="Edit exam" aria-label="Edit exam" onclick="editRecord('exams', '${ex.id}')">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete exam" aria-label="Delete exam" onclick="softDeleteDocument('exams', '${ex.id}')">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        async function toggleExamActiveStatus() {
-            const examId = document.getElementById('examSelectBox').value;
-            const exam = window.DB_STATE.exams[examId];
-            exam.active = document.getElementById('examActiveToggle').checked;
-            exam.lastUpdated = Date.now();
-            await window.pushDocumentToCloud('exams', examId, exam);
-            onExamSelected();
-            showToast(`Exam active status set to: ${exam.active ? 'Active' : 'Inactive'}`);
+        function jumpToExamClass(examId, classId) {
+            document.getElementById('examSelectBox').value = examId;
+            document.getElementById('examClassSelectBox').value = classId;
+            bootstrap.Tab.getOrCreateInstance(document.getElementById('subtab-marks')).show();
+            onExamOrClassChanged();
         }
 
-        // ======================= SUB-TAB 1: SCHEDULE =======================
+        // ======================= SUB-TAB 2: SCHEDULE & SUBJECT SELECTION =======================
+        function getIncludedSubjects(exam, cls) {
+            const classSched = (exam.schedules && exam.schedules[cls.id]) || {};
+            const assigned = cls.subjects || [];
+            // If explicit settings exist, return only included ones; otherwise default all included
+            return assigned.filter(subCode => {
+                if (classSched[subCode] && classSched[subCode].included === false) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
         function renderScheduleTab(exam, cls) {
             const tbody = document.getElementById('scheduleTableBody');
             tbody.innerHTML = '';
             const subs = cls.subjects || [];
+
             if (subs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No subjects assigned to this classroom.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No subjects assigned to Class ${cls.class}-${cls.division}.</td></tr>`;
                 return;
             }
 
@@ -1875,14 +2063,20 @@
 
             subs.forEach(subCode => {
                 const subObj = window.DB_STATE.subjects[subCode] || { name: subCode };
-                const rule = currentSched[subCode] || { maxMark: 100, passMark: 35, date: '' };
+                const rule = currentSched[subCode] || { included: true, maxMark: 50, passMark: 18, date: '' };
+                const isIncluded = rule.included !== false;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+                    <td class="text-center">
+                        <div class="form-check form-switch d-inline-block">
+                            <input class="form-check-input sched-inc" type="checkbox" data-sub="${subCode}" ${isIncluded ? 'checked' : ''} ${isTeacher ? 'disabled' : ''}>
+                        </div>
+                    </td>
                     <td><strong>${subObj.name}</strong> <small class="text-muted">(${subCode})</small></td>
                     <td><input type="date" class="form-control form-control-sm sched-date" data-sub="${subCode}" value="${rule.date || ''}" ${isTeacher ? 'disabled' : ''}></td>
-                    <td><input type="number" class="form-control form-control-sm sched-max" data-sub="${subCode}" value="${rule.maxMark || 100}" ${isTeacher ? 'disabled' : ''}></td>
-                    <td><input type="number" class="form-control form-control-sm sched-pass" data-sub="${subCode}" value="${rule.passMark || 35}" ${isTeacher ? 'disabled' : ''}></td>
+                    <td><input type="number" class="form-control form-control-sm sched-max" data-sub="${subCode}" value="${rule.maxMark || 50}" min="1" ${isTeacher ? 'disabled' : ''}></td>
+                    <td><input type="number" class="form-control form-control-sm sched-pass" data-sub="${subCode}" value="${rule.passMark || 18}" min="0" ${isTeacher ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1896,78 +2090,145 @@
             if (!exam.schedules) exam.schedules = {};
             if (!exam.schedules[classId]) exam.schedules[classId] = {};
 
-            document.querySelectorAll('.sched-date').forEach(d => {
-                const sub = d.getAttribute('data-sub');
-                const max = parseInt(document.querySelector(`.sched-max[data-sub="${sub}"]`).value) || 100;
-                const pass = parseInt(document.querySelector(`.sched-pass[data-sub="${sub}"]`).value) || 35;
-                exam.schedules[classId][sub] = { date: d.value, maxMark: max, passMark: pass };
+            document.querySelectorAll('.sched-inc').forEach(chk => {
+                const sub = chk.getAttribute('data-sub');
+                const included = chk.checked;
+                const date = (document.querySelector(`.sched-date[data-sub="${sub}"]`) || {}).value || '';
+                const max = parseInt((document.querySelector(`.sched-max[data-sub="${sub}"]`) || {}).value) || 100;
+                const pass = parseInt((document.querySelector(`.sched-pass[data-sub="${sub}"]`) || {}).value) || 35;
+
+                exam.schedules[classId][sub] = { included, date, maxMark: max, passMark: pass };
             });
 
             exam.lastUpdated = Date.now();
             await window.pushDocumentToCloud('exams', examId, exam);
-            showToast("Schedule and passing marks saved.");
-            onExamSelected();
+            showToast("Exam schedule and included subjects saved.");
+            onExamOrClassChanged();
         }
 
-        // ======================= SUB-TAB 2: MARK ENTRY GRID =======================
+        // ======================= SUB-TAB 3: MARK & ATTENDANCE ENTRY =======================
         function getStudentsForClass(classId) {
             const cls = window.DB_STATE.classes[classId];
             if (!cls) return [];
-            return Object.values(window.DB_STATE.students).filter(s => s.academicYear === cls.academicYear && s.class === cls.class && s.division === cls.division);
+            return Object.values(window.DB_STATE.students).filter(s => !s.isDeleted && s.academicYear === cls.academicYear && s.class === cls.class && s.division === cls.division);
+        }
+
+        async function onWorkingDaysChanged() {
+            const examId = document.getElementById('examSelectBox').value;
+            const classId = document.getElementById('examClassSelectBox').value;
+            const exam = window.DB_STATE.exams[examId];
+            const cls = window.DB_STATE.classes[classId];
+            const wdVal = parseInt(document.getElementById('classWorkingDaysInput').value) || 0;
+
+            if (!exam.classStatus) exam.classStatus = {};
+            if (!exam.classStatus[cls.id]) exam.classStatus[cls.id] = { active: true, published: false, workingDays: 0 };
+            exam.classStatus[cls.id].workingDays = wdVal;
+
+            exam.lastUpdated = Date.now();
+            await window.pushDocumentToCloud('exams', exam.id, exam);
+            markUnsavedIndicator(true);
         }
 
         function renderMarkEntryTab(exam, cls) {
             const thead = document.getElementById('markEntryThead');
             const tbody = document.getElementById('markEntryTbody');
+            const filterContainer = document.getElementById('markEntrySubjectPills');
             thead.innerHTML = '';
             tbody.innerHTML = '';
+            filterContainer.innerHTML = '';
 
-            const subs = cls.subjects || [];
+            const includedSubs = getIncludedSubjects(exam, cls);
             const students = getStudentsForClass(cls.id);
-            const key = `${exam.id}_${cls.id}`;
-            const markDoc = window.DB_STATE.marks[key] || { scores: {} };
-            const isEntryDisabled = !exam.active || exam.published;
+            const classStatus = (exam.classStatus && exam.classStatus[cls.id]) || { active: exam.active ?? true, published: false };
+            const isEntryDisabled = !classStatus.active || classStatus.published;
 
-            let headerHtml = `<tr>
-                <th style="width: 100px;">Adm No</th>
-                <th style="min-width: 180px;">Student Name</th>`;
-
-            subs.forEach(code => {
-                const sched = (exam.schedules && exam.schedules[cls.id] && exam.schedules[cls.id][code]) || { maxMark: 100, passMark: 35 };
-                headerHtml += `<th class="text-center">${code}<br><small class="fw-normal text-muted">Pass: ${sched.passMark}/${sched.maxMark}</small></th>`;
+            // Generate Subject Multi-Filter Pills
+            includedSubs.forEach(subCode => {
+                const isSelected = window.DB_STATE.selectedSubjectFilters.has(subCode) || window.DB_STATE.selectedSubjectFilters.size === 0;
+                const pill = document.createElement('div');
+                pill.className = 'form-check form-check-inline';
+                pill.innerHTML = `
+                    <input class="form-check-input sub-filter-chk" type="checkbox" value="${subCode}" id="filter_${subCode}" ${isSelected ? 'checked' : ''} onchange="toggleSubjectFilter('${subCode}')">
+                    <label class="form-check-label small" for="filter_${subCode}">${subCode}</label>
+                `;
+                filterContainer.appendChild(pill);
             });
-            headerHtml += `</tr>`;
-            thead.innerHTML = headerHtml;
+
+            // Active filtered subjects
+            const visibleSubs = includedSubs.filter(s => window.DB_STATE.selectedSubjectFilters.size === 0 || window.DB_STATE.selectedSubjectFilters.has(s));
+
+            // Build Header
+            let headHtml = `<tr>
+                <th style="width: 90px;">Adm No</th>
+                <th style="min-width: 170px;">Student Name</th>
+                <th style="width: 110px;" class="text-center bg-light">Attended Days</th>`;
+
+            visibleSubs.forEach(code => {
+                const sched = (exam.schedules && exam.schedules[cls.id] && exam.schedules[cls.id][code]) || { maxMark: 50, passMark: 18 };
+                headHtml += `
+                    <th class="text-center" style="min-width: 130px;">
+                        ${code}
+                        <br><small class="text-muted fw-normal">Pass: ${sched.passMark}/${sched.maxMark}</small>
+                    </th>
+                `;
+            });
+            headHtml += `</tr>`;
+            thead.innerHTML = headHtml;
 
             if (students.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${subs.length + 2}" class="text-center py-4 text-muted">No students enrolled in Class ${cls.class}-${cls.division} for academic year ${cls.academicYear}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${visibleSubs.length + 3}" class="text-center py-4 text-muted">No students enrolled in Class ${cls.class}-${cls.division}.</td></tr>`;
                 return;
             }
 
             students.forEach(st => {
+                const docId = `${exam.academicYear}_${exam.id}_${st.adNumber}`;
+                const markDoc = window.DB_STATE.exam_marks[docId] || {};
+                const attended = markDoc.attendedDays !== undefined ? markDoc.attendedDays : '';
+
                 const tr = document.createElement('tr');
                 let rowHtml = `
                     <td class="fw-semibold">${st.adNumber}</td>
                     <td>${st.name} <small class="text-muted">(${st.gender || ''})</small></td>
+                    <td class="text-center bg-light">
+                        <input type="number" 
+                            class="form-control form-control-sm text-center att-input mx-auto fw-bold" 
+                            style="width: 75px;" 
+                            data-ad="${st.adNumber}" 
+                            value="${attended}" 
+                            placeholder="Days" 
+                            min="0"
+                            ${isEntryDisabled ? 'disabled' : ''} 
+                            oninput="markUnsavedIndicator(true)">
+                    </td>
                 `;
 
-                subs.forEach(code => {
-                    const sched = (exam.schedules && exam.schedules[cls.id] && exam.schedules[cls.id][code]) || { maxMark: 100, passMark: 35 };
-                    const studentMarks = (markDoc.scores && markDoc.scores[st.adNumber]) || {};
-                    const val = studentMarks[code] !== undefined ? studentMarks[code] : '';
-                    const isFail = val !== '' && Number(val) < sched.passMark;
+                visibleSubs.forEach(code => {
+                    const sched = (exam.schedules && exam.schedules[cls.id] && exam.schedules[cls.id][code]) || { maxMark: 50, passMark: 18 };
+                    const isAbsent = markDoc[`absent_${code}`] === true || markDoc[`mark_${code}`] === 'AB';
+                    const markVal = isAbsent ? 'AB' : (markDoc[`mark_${code}`] !== undefined ? markDoc[`mark_${code}`] : '');
+                    const isFail = !isAbsent && markVal !== '' && Number(markVal) < sched.passMark;
 
                     rowHtml += `
                         <td class="text-center">
-                            <input type="number" 
-                                class="form-control form-control-sm mark-input mx-auto ${isFail ? 'failed' : ''}" 
-                                data-ad="${st.adNumber}" 
-                                data-sub="${code}" 
-                                data-max="${sched.maxMark}" 
-                                data-pass="${sched.passMark}"
-                                value="${val}" 
-                                ${isEntryDisabled ? 'disabled' : ''}
-                                onchange="onMarkCellChange(this)">
+                            <div class="mark-cell-wrap">
+                                <input type="text" 
+                                    class="form-control form-control-sm mark-input ${isAbsent ? 'absent-mode' : (isFail ? 'failed' : '')}" 
+                                    data-ad="${st.adNumber}" 
+                                    data-sub="${code}" 
+                                    data-max="${sched.maxMark}" 
+                                    data-pass="${sched.passMark}"
+                                    value="${markVal}" 
+                                    ${isEntryDisabled ? 'disabled' : ''}
+                                    onfocus="this.select()"
+                                    oninput="onMarkInputChange(this)">
+                                <button type="button" 
+                                    class="btn ${isAbsent ? 'btn-danger' : 'btn-outline-secondary'} btn-ab-toggle" 
+                                    title="Toggle Absent" 
+                                    ${isEntryDisabled ? 'disabled' : ''}
+                                    onclick="toggleAbsentForCell('${st.adNumber}', '${code}')">
+                                    AB
+                                </button>
+                            </div>
                         </td>
                     `;
                 });
@@ -1976,79 +2237,209 @@
                 tr.innerHTML = rowHtml;
                 tbody.appendChild(tr);
             });
+
+            markUnsavedIndicator(false);
         }
 
-        async function onMarkCellChange(input) {
-            const ad = input.getAttribute('data-ad');
-            const sub = input.getAttribute('data-sub');
+        function toggleSubjectFilter(subCode) {
+            if (window.DB_STATE.selectedSubjectFilters.has(subCode)) {
+                window.DB_STATE.selectedSubjectFilters.delete(subCode);
+            } else {
+                window.DB_STATE.selectedSubjectFilters.add(subCode);
+            }
+            const examId = document.getElementById('examSelectBox').value;
+            const classId = document.getElementById('examClassSelectBox').value;
+            renderMarkEntryTab(window.DB_STATE.exams[examId], window.DB_STATE.classes[classId]);
+        }
+
+        function onMarkInputChange(input) {
+            markUnsavedIndicator(true);
             const max = parseInt(input.getAttribute('data-max'));
             const pass = parseInt(input.getAttribute('data-pass'));
-            let val = input.value.trim();
+            let val = input.value.trim().toUpperCase();
 
-            if (val !== '') {
-                val = Math.min(Math.max(0, parseInt(val)), max);
-                input.value = val;
-                if (val < pass) input.classList.add('failed');
-                else input.classList.remove('failed');
-            } else {
-                input.classList.remove('failed');
+            if (val === 'AB' || val === 'A') {
+                input.value = 'AB';
+                input.className = "form-control form-control-sm mark-input absent-mode";
+                return;
             }
 
+            if (val !== '') {
+                const numeric = parseInt(val);
+                if (isNaN(numeric)) {
+                    input.value = '';
+                    input.className = "form-control form-control-sm mark-input";
+                    return;
+                }
+                const clamped = Math.min(Math.max(0, numeric), max);
+                input.value = clamped;
+                if (clamped < pass) {
+                    input.className = "form-control form-control-sm mark-input failed";
+                } else {
+                    input.className = "form-control form-control-sm mark-input";
+                }
+            } else {
+                input.className = "form-control form-control-sm mark-input";
+            }
+        }
+
+        function toggleAbsentForCell(adNumber, subCode) {
+            const input = document.querySelector(`.mark-input[data-ad="${adNumber}"][data-sub="${subCode}"]`);
+            if (!input) return;
+            if (input.value === 'AB') {
+                input.value = '';
+                input.className = "form-control form-control-sm mark-input";
+            } else {
+                input.value = 'AB';
+                input.className = "form-control form-control-sm mark-input absent-mode";
+            }
+            markUnsavedIndicator(true);
+        }
+
+        function markUnsavedIndicator(isUnsaved) {
+            const badge = document.getElementById('markUnsavedBadge');
+            const btn = document.getElementById('saveAllMarksBtn');
+            if (isUnsaved) {
+                badge.className = "d-block text-danger fw-bold mt-1";
+                badge.innerText = "● Unsaved changes pending";
+                btn.classList.add('btn-warning');
+                btn.classList.remove('btn-emerald');
+            } else {
+                badge.className = "d-block text-muted mt-1";
+                badge.innerText = "All changes synced";
+                btn.classList.add('btn-emerald');
+                btn.classList.remove('btn-warning');
+            }
+        }
+
+        // ======================= SAVE ALL MARKS & ATTENDANCE =======================
+        async function saveAllMarksAndAttendance() {
             const examId = document.getElementById('examSelectBox').value;
             const classId = document.getElementById('examClassSelectBox').value;
             const exam = window.DB_STATE.exams[examId];
             const cls = window.DB_STATE.classes[classId];
-            const key = `${examId}_${classId}`;
+            const students = getStudentsForClass(cls.id);
+            const workingDays = parseInt(document.getElementById('classWorkingDaysInput').value) || 0;
 
-            if (!window.DB_STATE.marks[key]) {
-                window.DB_STATE.marks[key] = { id: key, academicYear: exam.academicYear, scores: {}, lastUpdated: Date.now() };
-            }
-            if (!window.DB_STATE.marks[key].scores[ad]) {
-                window.DB_STATE.marks[key].scores[ad] = {};
-            }
+            const btn = document.getElementById('saveAllMarksBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Saving...`;
 
-            window.DB_STATE.marks[key].scores[ad][sub] = val !== '' ? val : null;
-            window.DB_STATE.marks[key].lastUpdated = Date.now();
-
-            window.saveLocalCache();
             try {
-                await window.F_OPS.setDoc(window.F_OPS.doc(window.F_DB, "exam_marks", key), window.DB_STATE.marks[key]);
-            } catch (err) { console.warn("Mark queued locally:", err); }
+                const batch = window.F_OPS.writeBatch(window.F_DB);
+                let writeCount = 0;
 
-            renderResultsTab(exam, cls);
+                students.forEach(st => {
+                    const docId = `${exam.academicYear}_${exam.id}_${st.adNumber}`;
+                    const attInput = document.querySelector(`.att-input[data-ad="${st.adNumber}"]`);
+                    const attendedDays = attInput && attInput.value !== '' ? parseInt(attInput.value) : 0;
+
+                    const markPayload = {
+                        academicYear: exam.academicYear,
+                        examId: exam.id,
+                        examName: exam.name,
+                        adnumber: st.adNumber,
+                        name: st.name,
+                        class: cls.class,
+                        division: cls.division,
+                        workingDays: workingDays,
+                        attendedDays: attendedDays,
+                        isDeleted: false,
+                        lastUpdated: Date.now()
+                    };
+
+                    // Extract all subject inputs
+                    document.querySelectorAll(`.mark-input[data-ad="${st.adNumber}"]`).forEach(inp => {
+                        const subCode = inp.getAttribute('data-sub');
+                        const raw = inp.value.trim().toUpperCase();
+
+                        if (raw === 'AB') {
+                            markPayload[`mark_${subCode}`] = 'AB';
+                            markPayload[`absent_${subCode}`] = true;
+                        } else if (raw !== '') {
+                            markPayload[`mark_${subCode}`] = parseInt(raw);
+                            markPayload[`absent_${subCode}`] = false;
+                        }
+                    });
+
+                    // Update memory state & batch
+                    window.DB_STATE.exam_marks[docId] = { ...(window.DB_STATE.exam_marks[docId] || {}), ...markPayload };
+                    const docRef = window.F_OPS.doc(window.F_DB, "exam_marks", docId);
+                    batch.set(docRef, markPayload);
+                    writeCount++;
+                });
+
+                if (writeCount > 0) {
+                    await batch.commit();
+                }
+
+                window.saveLocalCache();
+                markUnsavedIndicator(false);
+                showToast(`Saved marks and attendance for ${writeCount} students.`);
+                renderResultsTab(exam, cls);
+                renderProgressTab(exam, cls);
+            } catch (err) {
+                console.error("Save all marks error:", err);
+                showToast("Failed to save to cloud: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up me-1"></i> Save All Marks`;
+            }
         }
 
-        // ======================= SUB-TAB 3: RESULTS & AUTO-RANKINGS =======================
+        // ======================= SUB-TAB 4: RESULTS & RANKINGS =======================
         function computeClassResults(exam, cls) {
             const students = getStudentsForClass(cls.id);
-            const subs = cls.subjects || [];
-            const key = `${exam.id}_${cls.id}`;
-            const markDoc = window.DB_STATE.marks[key] || { scores: {} };
+            const includedSubs = getIncludedSubjects(exam, cls);
             const schedMap = (exam.schedules && exam.schedules[cls.id]) || {};
 
             let results = students.map(st => {
-                const sMarks = (markDoc.scores && markDoc.scores[st.adNumber]) || {};
+                const docId = `${exam.academicYear}_${exam.id}_${st.adNumber}`;
+                const markDoc = window.DB_STATE.exam_marks[docId] || {};
                 let totalMax = 0;
                 let totalObt = 0;
                 let isPassed = true;
+                let hasAbsent = false;
                 let subjectBreakdown = {};
 
-                subs.forEach(sub => {
-                    const rule = schedMap[sub] || { maxMark: 100, passMark: 35 };
+                includedSubs.forEach(sub => {
+                    const rule = schedMap[sub] || { maxMark: 50, passMark: 18 };
                     totalMax += rule.maxMark;
-                    const mark = sMarks[sub] !== undefined && sMarks[sub] !== null ? Number(sMarks[sub]) : 0;
-                    totalObt += mark;
-                    if (mark < rule.passMark) isPassed = false;
+                    const isAbsent = markDoc[`absent_${sub}`] === true || markDoc[`mark_${sub}`] === 'AB';
+                    const rawVal = markDoc[`mark_${sub}`];
 
-                    subjectBreakdown[sub] = {
-                        obt: mark,
-                        max: rule.maxMark,
-                        pass: rule.passMark,
-                        grade: calculateGrade(rule.maxMark, mark)
-                    };
+                    if (isAbsent) {
+                        hasAbsent = true;
+                        isPassed = false;
+                        subjectBreakdown[sub] = {
+                            obt: 'AB',
+                            numeric: 0,
+                            max: rule.maxMark,
+                            pass: rule.passMark,
+                            grade: 'AB',
+                            isAbsent: true
+                        };
+                    } else {
+                        const obt = rawVal !== undefined && rawVal !== null ? Number(rawVal) : 0;
+                        totalObt += obt;
+                        if (obt < rule.passMark) isPassed = false;
+
+                        subjectBreakdown[sub] = {
+                            obt: obt,
+                            numeric: obt,
+                            max: rule.maxMark,
+                            pass: rule.passMark,
+                            grade: calculateGrade(rule.maxMark, obt),
+                            isAbsent: false
+                        };
+                    }
                 });
 
                 const percentage = totalMax > 0 ? ((totalObt / totalMax) * 100).toFixed(1) : 0;
+                const workingDays = markDoc.workingDays || (exam.classStatus && exam.classStatus[cls.id] && exam.classStatus[cls.id].workingDays) || 0;
+                const attendedDays = markDoc.attendedDays || 0;
+                const attendancePercentage = workingDays > 0 ? ((attendedDays / workingDays) * 100).toFixed(1) : 0;
+
                 return {
                     adNumber: st.adNumber,
                     name: st.name,
@@ -2057,12 +2448,16 @@
                     totalMax,
                     percentage: parseFloat(percentage),
                     isPassed,
+                    hasAbsent,
+                    workingDays,
+                    attendedDays,
+                    attendancePercentage,
                     subjectBreakdown,
-                    overallGrade: getOverallGrade(parseFloat(percentage), isPassed)
+                    overallGrade: getOverallGrade(parseFloat(percentage), isPassed, hasAbsent)
                 };
             });
 
-            // Competition Ranking
+            // Ranking logic: Passed students first by total obtained, then failures/absentees
             results.sort((a, b) => {
                 if (a.isPassed !== b.isPassed) return a.isPassed ? -1 : 1;
                 return b.totalObt - a.totalObt;
@@ -2097,11 +2492,12 @@
             return "D";
         }
 
-        function getOverallGrade(percent, isPassed) {
+        function getOverallGrade(percent, isPassed, hasAbsent) {
+            if (hasAbsent) return "Absent in Exam";
             if (!isPassed) return "Needs Improvement";
             if (percent >= 90) return "Distinction (A+)";
-            if (percent >= 80) return "First Class with Distinction (A)";
-            if (percent >= 70) return "First Class (B+)";
+            if (percent >= 80) return "First Class (A)";
+            if (percent >= 70) return "Second Class (B+)";
             if (percent >= 60) return "Second Class (B)";
             if (percent >= 50) return "Third Class (C+)";
             return "Pass";
@@ -2113,13 +2509,14 @@
             thead.innerHTML = '';
             tbody.innerHTML = '';
 
-            const subs = cls.subjects || [];
+            const subs = getIncludedSubjects(exam, cls);
             const results = computeClassResults(exam, cls);
 
             let headHtml = `<tr>
-                <th style="width: 70px;">Rank</th>
+                <th style="width: 65px;" class="text-center">Rank</th>
                 <th>Adm No</th>
-                <th>Student Name</th>`;
+                <th>Student Name</th>
+                <th class="text-center bg-light">Attendance</th>`;
             subs.forEach(s => headHtml += `<th class="text-center">${s}</th>`);
             headHtml += `
                 <th class="text-center">Total</th>
@@ -2129,7 +2526,7 @@
             thead.innerHTML = headHtml;
 
             if (results.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${subs.length + 6}" class="text-center py-4 text-muted">No marks recorded yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${subs.length + 7}" class="text-center py-4 text-muted">No marks recorded yet.</td></tr>`;
                 return;
             }
 
@@ -2137,14 +2534,19 @@
                 const tr = document.createElement('tr');
                 const rankClass = res.rank === 1 ? 'rank-1' : res.rank === 2 ? 'rank-2' : res.rank === 3 ? 'rank-3' : '';
                 let rowHtml = `
-                    <td><span class="rank-badge ${rankClass}">${res.rank}</span></td>
+                    <td class="text-center"><span class="rank-badge ${rankClass}">${res.rank}</span></td>
                     <td class="fw-semibold">${res.adNumber}</td>
                     <td>${res.name}</td>
+                    <td class="text-center bg-light small">${res.attendedDays}/${res.workingDays} <span class="text-muted">(${res.attendancePercentage}%)</span></td>
                 `;
 
                 subs.forEach(s => {
                     const sb = res.subjectBreakdown[s] || { obt: 0, grade: 'D' };
-                    rowHtml += `<td class="text-center">${sb.obt} <small class="text-muted fw-bold">(${sb.grade})</small></td>`;
+                    if (sb.isAbsent) {
+                        rowHtml += `<td class="text-center text-danger fw-bold">AB</td>`;
+                    } else {
+                        rowHtml += `<td class="text-center">${sb.obt} <small class="text-muted fw-bold">(${sb.grade})</small></td>`;
+                    }
                 });
 
                 rowHtml += `
@@ -2152,7 +2554,7 @@
                     <td class="text-center fw-semibold">${res.percentage}%</td>
                     <td class="text-center">
                         <span class="badge ${res.isPassed ? 'bg-success' : 'bg-danger'}">
-                            ${res.isPassed ? 'PASSED' : 'FAILED'}
+                            ${res.isPassed ? 'PASSED' : (res.hasAbsent ? 'ABSENT' : 'FAILED')}
                         </span>
                     </td>
                 `;
@@ -2161,25 +2563,33 @@
             });
         }
 
+        function recalculateAndRefreshRanks() {
+            const examId = document.getElementById('examSelectBox').value;
+            const classId = document.getElementById('examClassSelectBox').value;
+            renderResultsTab(window.DB_STATE.exams[examId], window.DB_STATE.classes[classId]);
+            showToast("Rankings refreshed.");
+        }
+
         function exportResultsCsv() {
             const examId = document.getElementById('examSelectBox').value;
             const classId = document.getElementById('examClassSelectBox').value;
             const exam = window.DB_STATE.exams[examId];
             const cls = window.DB_STATE.classes[classId];
             const results = computeClassResults(exam, cls);
+            const subs = getIncludedSubjects(exam, cls);
 
             if (results.length === 0) {
                 showToast("No data to export.");
                 return;
             }
 
-            let csv = "Rank,Admission No,Student Name,Gender,";
-            cls.subjects.forEach(s => csv += `${s},`);
+            let csv = "Rank,Admission No,Student Name,Gender,Working Days,Attended Days,Attendance %,";
+            subs.forEach(s => csv += `${s},`);
             csv += "Total Obtained,Max Marks,Percentage,Status\n";
 
             results.forEach(r => {
-                csv += `"${r.rank}","${r.adNumber}","${r.name}","${r.gender || ''}",`;
-                cls.subjects.forEach(s => {
+                csv += `"${r.rank}","${r.adNumber}","${r.name}","${r.gender || ''}","${r.workingDays}","${r.attendedDays}","${r.attendancePercentage}%",`;
+                subs.forEach(s => {
                     const sb = r.subjectBreakdown[s] || { obt: 0 };
                     csv += `"${sb.obt}",`;
                 });
@@ -2194,7 +2604,90 @@
             a.click();
         }
 
-        // ======================= SUB-TAB 4: PROGRESS CARDS =======================
+        // ======================= PUBLISH WORKFLOW =======================
+        async function publishExamResults() {
+            const examId = document.getElementById('examSelectBox').value;
+            const classId = document.getElementById('examClassSelectBox').value;
+            const exam = window.DB_STATE.exams[examId];
+            const cls = window.DB_STATE.classes[classId];
+
+            if (!confirm(`Publish results for Class ${cls.class}-${cls.division}? This locks mark entry and stores a snapshot in 'published_results'.`)) {
+                return;
+            }
+
+            if (!exam.classStatus) exam.classStatus = {};
+            if (!exam.classStatus[cls.id]) exam.classStatus[cls.id] = { workingDays: 0 };
+            exam.classStatus[cls.id].active = false;
+            exam.classStatus[cls.id].published = true;
+            exam.lastUpdated = Date.now();
+
+            const results = computeClassResults(exam, cls);
+            const snapshotKey = `${exam.academicYear}_${exam.id}_${cls.id}`;
+            const publishedPayload = {
+                id: snapshotKey,
+                academicYear: exam.academicYear,
+                examId: exam.id,
+                examName: exam.name,
+                classId: cls.id,
+                class: cls.class,
+                division: cls.division,
+                subjects: getIncludedSubjects(exam, cls),
+                totalStudents: results.length,
+                topper: results.length > 0 && results[0].isPassed ? `${results[0].name} (${results[0].totalObt} marks)` : 'None',
+                results: results,
+                publishedAt: Date.now(),
+                isDeleted: false,
+                lastUpdated: Date.now()
+            };
+
+            await window.pushDocumentToCloud('published_results', snapshotKey, publishedPayload);
+            await window.pushDocumentToCloud('exams', exam.id, exam);
+
+            onExamOrClassChanged();
+            showToast(`Results published successfully to 'published_results'!`);
+        }
+
+        function renderPublishedArchive() {
+            const tbody = document.getElementById('publishedSnapshotsTbody');
+            tbody.innerHTML = '';
+            const ay = window.DB_STATE.selectedAcademicYear;
+            const list = Object.values(window.DB_STATE.published_results).filter(p => !p.isDeleted && (!ay || p.academicYear === ay));
+            document.getElementById('publishedCountBadge').innerText = `${list.length} Records`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No published result records for current academic year.</td></tr>`;
+                return;
+            }
+
+            list.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.examName}</strong></td>
+                    <td><span class="badge bg-light text-dark border">${item.academicYear || '-'}</span></td>
+                    <td>Class ${item.class} - ${item.division}</td>
+                    <td>${item.totalStudents}</td>
+                    <td><span class="badge bg-warning text-dark"><i class="fa-solid fa-trophy me-1"></i>${item.topper}</span></td>
+                    <td>${new Date(item.lastUpdated).toLocaleString()}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewPublishedSnapshot('${item.id}')">
+                            <i class="fa-solid fa-eye me-1"></i> View
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewPublishedSnapshot(id) {
+            const item = window.DB_STATE.published_results[id];
+            if (!item) return;
+            document.getElementById('examSelectBox').value = item.examId;
+            document.getElementById('examClassSelectBox').value = item.classId;
+            switchSidebarPanel('exams');
+            bootstrap.Tab.getOrCreateInstance(document.getElementById('subtab-results')).show();
+        }
+
+        // ======================= SUB-TAB 5: PROGRESS CARDS =======================
         function renderProgressTab(exam, cls) {
             const listContainer = document.getElementById('progressStudentList');
             listContainer.innerHTML = '';
@@ -2242,20 +2735,20 @@
 
         function renderSingleProgressCard(res, exam, cls) {
             const target = document.getElementById('progressCardTarget');
-            const subs = cls.subjects || [];
+            const subs = getIncludedSubjects(exam, cls);
 
             let rowsHtml = '';
             subs.forEach(subCode => {
                 const subObj = window.DB_STATE.subjects[subCode] || { name: subCode };
                 const sb = res.subjectBreakdown[subCode] || { obt: 0, max: 100, pass: 35, grade: 'D' };
-                const isFail = sb.obt < sb.pass;
+                const isFail = sb.isAbsent || sb.numeric < sb.pass;
 
                 rowsHtml += `
                     <tr class="${isFail ? 'table-danger' : ''}">
                         <td class="text-start ps-2 py-1 fw-semibold">${subObj.name}</td>
                         <td class="py-1">${sb.max}</td>
                         <td class="py-1">${sb.pass}</td>
-                        <td class="py-1">${sb.obt}</td>
+                        <td class="py-1 font-weight-bold ${sb.isAbsent ? 'text-danger fw-bold' : ''}">${sb.obt}</td>
                         <td class="py-1"><strong>${sb.grade}</strong></td>
                     </tr>
                 `;
@@ -2288,6 +2781,13 @@
                     </div>
                 </div>
 
+                <!-- Attendance Strip in Progress Card -->
+                <div class="d-flex justify-content-between align-items-center mb-2 px-2 py-1 rounded border bg-white" style="font-size: 11px;">
+                    <div><span class="text-muted">Working Days:</span> <strong>${res.workingDays}</strong></div>
+                    <div><span class="text-muted">Attended:</span> <strong>${res.attendedDays}</strong></div>
+                    <div><span class="text-muted">Attendance:</span> <strong class="text-primary">${res.attendancePercentage}%</strong></div>
+                </div>
+
                 <table class="table table-sm table-bordered mb-2" style="font-size: 12px;">
                     <thead class="table-light">
                         <tr>
@@ -2307,7 +2807,7 @@
                 </div>
 
                 <div class="mt-2 p-2 rounded text-uppercase fw-bold text-center ${res.isPassed ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'}" style="font-size: 13px;">
-                    ${res.isPassed ? '🎉 Passed Successfully' : '⚠️ Needs Improvement'}
+                    ${res.isPassed ? '🎉 Passed Successfully' : (res.hasAbsent ? '⚠️ Absent in Examination' : '⚠️ Needs Improvement')}
                 </div>
 
                 <div class="mt-2 text-center text-muted" style="font-size: 9px;">
@@ -2338,88 +2838,19 @@
             html2pdf().set(opt).from(cardEl).save();
         }
 
-        // ======================= PUBLISH WORKFLOW =======================
-        async function publishExamResults() {
-            const examId = document.getElementById('examSelectBox').value;
-            const classId = document.getElementById('examClassSelectBox').value;
-            const exam = window.DB_STATE.exams[examId];
-            const cls = window.DB_STATE.classes[classId];
-
-            if (!confirm(`Publish results for Class ${cls.class}-${cls.division}? This will set Active: OFF, snapshot the evaluated ranks, and write to 'published_results'.`)) {
-                return;
+        // ======================= SOFT DELETES & UTILITIES =======================
+        async function softDeleteDocument(collectionName, docId) {
+            if (!confirm(`Are you sure you want to delete this record?`)) return;
+            const target = window.DB_STATE[collectionName][docId];
+            if (target) {
+                target.isDeleted = true;
+                target.lastUpdated = Date.now();
+                await window.pushDocumentToCloud(collectionName, docId, target);
+                showToast("Record marked as deleted.");
+                refreshActivePanels();
             }
-
-            exam.active = false;
-            exam.published = true;
-            exam.lastUpdated = Date.now();
-            document.getElementById('examActiveToggle').checked = false;
-
-            const results = computeClassResults(exam, cls);
-            const snapshotKey = `${exam.id}_${cls.id}`;
-            const publishedPayload = {
-                id: snapshotKey,
-                academicYear: exam.academicYear,
-                examId: exam.id,
-                examName: exam.name,
-                classId: cls.id,
-                class: cls.class,
-                division: cls.division,
-                subjects: cls.subjects,
-                totalStudents: results.length,
-                topper: results.length > 0 && results[0].isPassed ? `${results[0].name} (${results[0].totalObt} marks)` : 'None',
-                results: results,
-                publishedAt: Date.now(),
-                lastUpdated: Date.now()
-            };
-
-            await window.pushDocumentToCloud('published_results', snapshotKey, publishedPayload);
-            await window.pushDocumentToCloud('exams', exam.id, exam);
-
-            onExamSelected();
-            showToast(`Results published successfully to 'published_results'!`);
         }
 
-        function renderPublishedArchive() {
-            const tbody = document.getElementById('publishedSnapshotsTbody');
-            tbody.innerHTML = '';
-            const ay = window.DB_STATE.selectedAcademicYear;
-            const list = Object.values(window.DB_STATE.published_results).filter(p => !ay || p.academicYear === ay);
-            document.getElementById('publishedCountBadge').innerText = `${list.length} Records`;
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No published result records for current academic year.</td></tr>`;
-                return;
-            }
-
-            list.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.examName}</strong></td>
-                    <td><span class="badge bg-light text-dark border">${item.academicYear || '-'}</span></td>
-                    <td>Class ${item.class} - ${item.division}</td>
-                    <td>${item.totalStudents}</td>
-                    <td><span class="badge bg-warning text-dark"><i class="fa-solid fa-trophy me-1"></i>${item.topper}</span></td>
-                    <td>${new Date(item.lastUpdated).toLocaleString()}</td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewPublishedSnapshot('${item.id}')">
-                            <i class="fa-solid fa-eye me-1"></i> View
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function viewPublishedSnapshot(id) {
-            const item = window.DB_STATE.published_results[id];
-            if (!item) return;
-            document.getElementById('examSelectBox').value = item.examId;
-            document.getElementById('examClassSelectBox').value = item.classId;
-            switchSidebarPanel('exams');
-            bootstrap.Tab.getOrCreateInstance(document.getElementById('subtab-results')).show();
-        }
-
-        // ======================= GENERAL UTILITIES =======================
         function refreshActivePanels() {
             if (window.DB_STATE.currentUser) {
                 renderClassroomsTable();
@@ -2431,8 +2862,10 @@
             }
         }
 
-        function forceSync() {
-            window.syncBidirectional();
+        async function forceSync() {
+            await window.fetchOnDemand(['academic_years', 'classes', 'subjects', 'exams', 'students', 'exam_marks', 'published_results']);
+            refreshActivePanels();
+            showToast("Cloud data synchronized successfully.");
         }
 
         function showToast(msg) {
@@ -2442,6 +2875,7 @@
         }
     </script>
 
+    <script src="js/modules/management-actions.js"></script>
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
