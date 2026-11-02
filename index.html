@@ -407,7 +407,7 @@
 
             <ul class="sidebar-menu" id="sidebarMenu">
                 <li class="sidebar-section">Exams</li>
-                <li class="sidebar-item">
+                <li class="sidebar-item admin-only-feature">
                     <a href="javascript:void(0)" class="sidebar-link active" data-panel="exams" onclick="switchSidebarPanel('exams')" title="Manage exams and schedules">
                         <i class="fa-solid fa-file-circle-plus"></i>
                         <span>Exam Setup</span>
@@ -496,7 +496,7 @@
                     <!-- Horizontal Exam Sub-Tabs Header -->
                     <div class="exam-tabs-scroll mb-3" aria-label="Exam sections">
                     <ul class="nav nav-pills exam-horizontal-tabs gap-2" id="examSubTabs" role="tablist">
-                        <li class="nav-item">
+                        <li class="nav-item admin-only-feature">
                             <button class="nav-link active" id="subtab-examlist" data-bs-toggle="pill" data-bs-target="#tabExamList" onclick="onSubTabOpen('exams')">
                                 <i class="fa-solid fa-list-check me-1"></i> Exams
                             </button>
@@ -555,7 +555,7 @@
                     <div class="tab-content" id="examSubTabsContent">
                         
                         <!-- TAB 1: EXAMS LIST & CLASS DEEP DIVE -->
-                        <div class="tab-pane fade show active" id="tabExamList">
+                        <div class="tab-pane fade show active admin-only-feature" id="tabExamList">
                             <div class="card shadow-sm border-0 rounded-3 mb-3">
                                 <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
                                     <span><i class="fa-solid fa-table-list text-primary me-2"></i>Examinations & Class Status Deep Dive</span>
@@ -589,7 +589,7 @@
                                         <i class="fa-solid fa-sliders text-emerald me-1"></i> Exam Subject Inclusion, Dates & Pass Marks
                                         <div class="small text-muted fw-normal">Select which subjects have exams in this term. Unselected subjects won't appear in mark sheets.</div>
                                     </div>
-                                    <button class="btn btn-sm btn-emerald admin-only-feature" onclick="saveExamScheduleRules()">
+                                    <button id="saveExamScheduleBtn" class="btn btn-sm btn-emerald" onclick="saveExamScheduleRules()" disabled>
                                         <i class="fa-solid fa-floppy-disk me-1"></i> Save Schedule Settings
                                     </button>
                                 </div>
@@ -1487,7 +1487,7 @@
             }
 
             initAcademicYears();
-            switchSidebarPanel('exams');
+            switchSidebarPanel(user.role === 'admin' ? 'exams' : 'evaluation');
         }
 
         // ======================= SIDEBAR NAVIGATION =======================
@@ -1500,6 +1500,7 @@
             exams: {
                 title: 'Exam Setup & Schedule',
                 elementId: 'panelExams',
+                adminOnly: true,
                 collections: ['exams', 'classes', 'students', 'exam_marks'],
                 onOpen() {
                     onExamOrClassChanged();
@@ -1554,6 +1555,10 @@
             const config = sidebarPanels[panelName];
             if (!config) {
                 showToast(`Module "${panelName}" is not configured.`);
+                return;
+            }
+            if (config.adminOnly && window.DB_STATE.currentUser?.role !== 'admin') {
+                showToast('Exam setup is available to administrators only.');
                 return;
             }
 
@@ -2044,6 +2049,8 @@
             const tbody = document.getElementById('scheduleTableBody');
             tbody.innerHTML = '';
             const subs = cls.subjects || [];
+            const saveButton = document.getElementById('saveExamScheduleBtn');
+            saveButton.disabled = true;
 
             if (subs.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No subjects assigned to Class ${cls.class}-${cls.division}.</td></tr>`;
@@ -2052,6 +2059,8 @@
 
             const isTeacher = window.DB_STATE.currentUser && window.DB_STATE.currentUser.role === 'class';
             const currentSched = (exam.schedules && exam.schedules[cls.id]) || {};
+            const scheduleAlreadySaved = Object.keys(currentSched).length > 0;
+            const fieldsDisabled = isTeacher && scheduleAlreadySaved;
 
             subs.forEach(subCode => {
                 const subObj = window.DB_STATE.subjects[subCode] || { name: subCode };
@@ -2062,22 +2071,39 @@
                 tr.innerHTML = `
                     <td class="text-center">
                         <div class="form-check form-switch d-inline-block">
-                            <input class="form-check-input sched-inc" type="checkbox" data-sub="${subCode}" ${isIncluded ? 'checked' : ''} ${isTeacher ? 'disabled' : ''}>
+                            <input class="form-check-input sched-inc" type="checkbox" data-sub="${subCode}" data-initial-checked="${isIncluded}" ${isIncluded ? 'checked' : ''} ${fieldsDisabled ? 'disabled' : ''}>
                         </div>
                     </td>
                     <td><strong>${subObj.name}</strong> <small class="text-muted">(${subCode})</small></td>
-                    <td><input type="date" class="form-control form-control-sm sched-date" data-sub="${subCode}" value="${rule.date || ''}" ${isTeacher ? 'disabled' : ''}></td>
-                    <td><input type="number" class="form-control form-control-sm sched-max" data-sub="${subCode}" value="${rule.maxMark || 50}" min="1" ${isTeacher ? 'disabled' : ''}></td>
-                    <td><input type="number" class="form-control form-control-sm sched-pass" data-sub="${subCode}" value="${rule.passMark || 18}" min="0" ${isTeacher ? 'disabled' : ''}></td>
+                    <td><input type="date" class="form-control form-control-sm sched-date" data-sub="${subCode}" data-initial-value="${rule.date || ''}" value="${rule.date || ''}" ${fieldsDisabled ? 'disabled' : ''}></td>
+                    <td><input type="number" class="form-control form-control-sm sched-max" data-sub="${subCode}" data-initial-value="${rule.maxMark ?? 50}" value="${rule.maxMark ?? 50}" min="1" ${fieldsDisabled ? 'disabled' : ''}></td>
+                    <td><input type="number" class="form-control form-control-sm sched-pass" data-sub="${subCode}" data-initial-value="${rule.passMark ?? 18}" value="${rule.passMark ?? 18}" min="0" ${fieldsDisabled ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
             });
+
+            tbody.oninput = updateScheduleSaveButton;
+            tbody.onchange = updateScheduleSaveButton;
+        }
+
+        function updateScheduleSaveButton() {
+            const saveButton = document.getElementById('saveExamScheduleBtn');
+            const hasChanges = [...document.querySelectorAll('#scheduleTableBody .sched-inc, #scheduleTableBody .sched-date, #scheduleTableBody .sched-max, #scheduleTableBody .sched-pass')]
+                .some(input => input.type === 'checkbox'
+                    ? input.checked.toString() !== input.dataset.initialChecked
+                    : input.value !== input.dataset.initialValue);
+            saveButton.disabled = !hasChanges;
         }
 
         async function saveExamScheduleRules() {
             const examId = document.getElementById('examSelectBox').value;
             const classId = document.getElementById('examClassSelectBox').value;
             const exam = window.DB_STATE.exams[examId];
+            const classSchedule = exam.schedules?.[classId];
+            if (window.DB_STATE.currentUser?.role === 'class' && classSchedule && Object.keys(classSchedule).length > 0) {
+                showToast('This classroom schedule has already been saved. Ask an administrator to make changes.');
+                return;
+            }
 
             if (!exam.schedules) exam.schedules = {};
             if (!exam.schedules[classId]) exam.schedules[classId] = {};
@@ -2086,16 +2112,24 @@
                 const sub = chk.getAttribute('data-sub');
                 const included = chk.checked;
                 const date = (document.querySelector(`.sched-date[data-sub="${sub}"]`) || {}).value || '';
-                const max = parseInt((document.querySelector(`.sched-max[data-sub="${sub}"]`) || {}).value) || 100;
-                const pass = parseInt((document.querySelector(`.sched-pass[data-sub="${sub}"]`) || {}).value) || 35;
+                const maxValue = parseInt((document.querySelector(`.sched-max[data-sub="${sub}"]`) || {}).value, 10);
+                const passValue = parseInt((document.querySelector(`.sched-pass[data-sub="${sub}"]`) || {}).value, 10);
+                const max = Number.isFinite(maxValue) ? maxValue : 50;
+                const pass = Number.isFinite(passValue) ? passValue : 18;
 
                 exam.schedules[classId][sub] = { included, date, maxMark: max, passMark: pass };
             });
 
             exam.lastUpdated = Date.now();
-            await window.pushDocumentToCloud('exams', examId, exam);
-            showToast("Exam schedule and included subjects saved.");
-            onExamOrClassChanged();
+            const saveButton = document.getElementById('saveExamScheduleBtn');
+            saveButton.disabled = true;
+            try {
+                await window.pushDocumentToCloud('exams', examId, exam);
+                showToast("Exam schedule and included subjects saved.");
+                onExamOrClassChanged();
+            } finally {
+                updateScheduleSaveButton();
+            }
         }
 
         // ======================= SUB-TAB 3: MARK & ATTENDANCE ENTRY =======================
