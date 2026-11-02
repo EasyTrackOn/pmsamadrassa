@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+    <script src="js/config.js"> </script>
     <style>
         :root {
             --primary-emerald: #047857;
@@ -1140,15 +1140,7 @@
             writeBatch
         } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-    apiKey: "AIzaSyAnhG66jCmzzRQs24rO6fUxPNjugkZeyfU",
-    authDomain: "hidayathulmumineen.firebaseapp.com",
-    projectId: "hidayathulmumineen",
-    storageBucket: "hidayathulmumineen.firebasestorage.app",
-    messagingSenderId: "953288417661",
-    appId: "1:953288417661:web:09050a3ec899fb28edac14",
-    measurementId: "G-B1Q5MS2HJV"
-  };
+        
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -1178,7 +1170,7 @@
 
         window.loadLocalCache = function() {
             try {
-                const raw = localStorage.getItem('EDUSYNC_STORE_V2');
+                const raw = localStorage.getItem('EDUSYNC_STORE_V3');
                 if (raw) {
                     const parsed = JSON.parse(raw);
                     window.DB_STATE.academic_years = parsed.academic_years || {};
@@ -1197,7 +1189,7 @@
 
         window.saveLocalCache = function() {
             try {
-                localStorage.setItem('EDUSYNC_STORE_V2', JSON.stringify({
+                localStorage.setItem('EDUSYNC_STORE_V3', JSON.stringify({
                     academic_years: window.DB_STATE.academic_years,
                     classes: window.DB_STATE.classes,
                     subjects: window.DB_STATE.subjects,
